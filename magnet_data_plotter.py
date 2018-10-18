@@ -37,6 +37,37 @@ def load_file(seq):
     data_list=numpy.array([time,pressure,temp,volume,mass])
     return data_list
 
+def calc_average_density(seq):
+    data_list=load_file(1)
+    i=0
+    tot=0
+    sum=0
+    while i < len(data_list[3,:]):
+      if data_list[3,i]!=0:
+        sum+=data_list[4,i]/data_list[3,i]
+        tot+=1
+      i+=1
+    print('average density used is {}'.format(sum/tot)) 
+#    fig=plt.figure(figsize=(10, 8), dpi=800,)
+#    plt.scatter(data_list[0,:],density, s=4)
+#    plt.title('Magnet whisper testing')
+#    plt.ylabel('density(mass over liters)')
+#    plt.show()
+
+def integrate_mass(seq):
+    data_list=load_file(1)
+    #convert mpm to mps
+    
+    #integrate over time and report the value
+    tot=numpy.trapz(data_list[4,:],x=data_list[0,:])
+#    i=0
+#    tot=0
+#    while i<len(data_list[4,:]):
+      
+      
+#      i+=1
+    print('total mass flowed out is {}'.format(tot)) 
+
 def plot_file(seq):
     data_list=load_file(1);
 #    plt.yscale('log')
