@@ -1,0 +1,21 @@
+#First is to describe from the wiki what wwas setup  before the readout started( first measurment from Whisper data is November 10th 9:50pm (log under Cooldown tests has this line in it "Setup magnet pressure sensors to be readout over night ").
+
+#First log is November 8th (Cooling the magnet with LN2). 
+#"stack relief pressure valve is 1PSI " at 13:10
+# Pressure reading from the magnet is at 2.5 PSI 
+# Minigoose sensors were installed onto the magnet skin in 6 different locations
+#See "pressure in magnet is reading" multiple times
+
+#unixtime(s)  event
+Whisper data starts at Friday November 10th 9:50PM ET time from unix timestamp
+Whisper data ends Tuesday November 21st at 3:46PM ET time from unix timestamp
+
+1510517160 is when the LHe was stoppe dtransferring on Nov 12th/ 
+This should be a good time as the start for the integration
+
+
+Liquid Helium weight that fills the dewar is about 68.75 lbs or 31.25 kg
+
+This weight is not necessarily all boiled off in the middle of the test. However, the Whisper data observes the magnet (which is topped off after turned off) from Nov 16th 11:55 to end of Whisper data maybe?
+
+Also, it looks like topping off procedure on Nov 16th at 11:55 has recorded dewar weights. Therefore, if the topping off procedure before that was from Nov 12th, then we have Nov 12th -16th boiled off a known amount in weight of dewar and can look at flow meters also!
