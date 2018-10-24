@@ -32,7 +32,8 @@ void error_propagation_beta_R(){
 //TH2D histogram for delta_m vs kinetic energy
   TProfile *h_delta_m_vs_T = new TProfile("Mass resolution vs kinetic energy per nucleon", "Mass resolution vs kinetic energy per nucelon", 1000, 0 , 9);
 // Histogram of beta and R variables. 
-  TH1D *h_beta= new TH1D("velocity histogram", "velocity histogram", 100, 0, 0.37);
+  TH1D *h_beta= new TH1D("velocity histogram", "velocity histogram", 100000, 0, 0.37);
+  TH1D *h_beta_log= new TH1D("Log velocity histogram", "Log velocity histogram", 1000, -3, 0);
 //  TH1D *h_R= new TH1D("Rigidity histogram", "Rigidity histogram", 100, 0, 1);
 
 // file to save hists
@@ -62,9 +63,11 @@ void error_propagation_beta_R(){
 //    double R_mean=calculate_R(gamma);
 //    double R_sigma=;
 
-    for(int j=0; j<100; j++){
+    for(int j=0; j<1000; j++){
       double beta_measure=fRand->Gaus(beta_mean,beta_sigma);
       h_beta->Fill(beta_measure);
+// fill a logged histogram
+      h_beta_log->Fill(TMath::Log(beta_measure));
     }
 //    double res_p=beta*gamma*mass/Rm;  //resolution of momentum, p is deltap over p and is equal to delta R over R which is R over MDR (Rm). now for a given mass and gamma, we know delta_p over p or res_p
     double res_p=0;  //turn off momentum resolution
@@ -97,6 +100,7 @@ void error_propagation_beta_R(){
 // save graphs to root file:
   file_out1->cd();
   h_beta->Write("beta_measured");
+  h_beta_log->Write("beta_log");
   file_out1->Close();
 
 //  file_out2->cd();

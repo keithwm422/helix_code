@@ -30,7 +30,7 @@ void Beta_vs_R(){
 //  TH2D *hBeta_vs_R= new TH2D("Events of velocity and rigidity dependence on energy","Rigidity filled Histogram" , 100,-10,10);
   TH1D *hMass_true= new TH1D("Mass Identification Histogram of True CRs", "Mass Identification Histogram", 200, 6, 14);
 // Open a file to save the data
-  TFile *file_out = new TFile("mass_resolution_beta_r.root","RECREATE");
+  TFile *file_out = new TFile("beta_r.root","RECREATE");
 
 // declare histograms of observed quantities
 //  TH1D *hRigid_observed= new TH1D("Rigidity filled Histogram","Rigidity filled Histogram" , 100,-10,10);

@@ -10,7 +10,7 @@
 Whisper data starts at Friday November 10th 9:50PM ET time from unix timestamp
 Whisper data ends Tuesday November 21st at 3:46PM ET time from unix timestamp
 
-1510517160 is when the LHe was stoppe dtransferring on Nov 12th/ 
+1510517160 is when the LHe was stopped transferring on Nov 12th/ 
 This should be a good time as the start for the integration
 
 
@@ -18,4 +18,7 @@ Liquid Helium weight that fills the dewar is about 68.75 lbs or 31.25 kg
 
 This weight is not necessarily all boiled off in the middle of the test. However, the Whisper data observes the magnet (which is topped off after turned off) from Nov 16th 11:55 to end of Whisper data maybe?
 
-Also, it looks like topping off procedure on Nov 16th at 11:55 has recorded dewar weights. Therefore, if the topping off procedure before that was from Nov 12th, then we have Nov 12th -16th boiled off a known amount in weight of dewar and can look at flow meters also!
+Also, it looks like topping off procedure on Nov 16th at 11:55 (1510836908)has recorded dewar weights. 
+Therefore, if the topping off procedure before that was from Nov 12th,
+then we have Nov 12th -16th boiled off a known amount in weight of dewar and can look at flow meters also!
+
