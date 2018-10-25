@@ -72,9 +72,9 @@ def integrate_volume_range(seq):
     data_list=load_file(1)
     fig=plt.figure(figsize=(10, 8), dpi=800,)
 #    start = 2170 #found from grep -n "1510520760" WhisperCleaned_data.csv
-#    end = 239030 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
-    start = 239030 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
-    end = len(data_list[0,:])-1 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
+#    end = 251968 # found from same as above but for time of 1510854954. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
+    start = 251968 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
+    end = len(data_list[0,:])-1 # end of recording flows 
 
     #convert time to minutes instead of hours
     data_list[0,:]= numpy.true_divide(data_list[0,:],0.016666666667)
@@ -102,8 +102,8 @@ def integrate_mass_range(seq):
     data_list=load_file(1)
     fig=plt.figure(figsize=(10, 8), dpi=800,)
 #    start = 2170 #found from grep -n "1510520760" WhisperCleaned_data.csv
-#    end = 239030 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
-    start = 239030 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
+#    end = 251968 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
+    start = 251968 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
     end = len(data_list[0,:])-1 # found from same as above but for time of 1510520760. also, because of 1st line in WhisperData_cleaned.csv being headers, subtract one from the line number. Then subtract one again for the accessing elements of an array (start at zero). 
 
     #convert time to minutes instead of hours
@@ -128,11 +128,23 @@ def integrate_mass_range(seq):
 
 def plot_file_all(seq):
     data_list=load_file(1);
+    time0=2170
+    time1=251968
 #    plt.yscale('log')
     fig=plt.figure(figsize=(10, 8), dpi=800,)
 
     plt.subplot(411)
     plt.scatter(data_list[0,0:-1:60],data_list[1,0:-1:60], s=4)
+
+# need to put these lins (but not the labels) on each subplot. Need to resize the text and add more lines for other notable things during data taking. 
+    xposition = [data_list[0,time0], data_list[0,time1], data_list[0,-1]] # these will be values in hours.
+    labels=['Stop transfer, begin ramping','Topped off after ramping','end of data']
+    i=0
+    for xc in xposition:
+      plt.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
+      plt.text(xc, 16, labels[i], rotation=90, fontsize=6)
+      i+=1
+
     plt.title('Magnet Thermal Test')
     plt.ylabel('Pressure (PSI)')
     plt.subplot(412)
