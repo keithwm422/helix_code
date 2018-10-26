@@ -15,9 +15,17 @@ Need to subtract from every time element this timestamp above to get to seconds 
 
 Whisper data ends Tuesday November 21st at 3:46PM ET time from unix timestamp
 
+Dewar weights from wiki:
+Unix, CT, weight
+1510509463, Nov12th11:57, 827.8 lbs
+1510512883, Nov12th12:54, 782.2 lbs
+1510520803, Nov12th15:06, 765.0 lbs
+1510854943, Nov16th11:55, 766.16 lbs
+ Nov16th11:55, 741.11 lbs
 
-Notable events:
-1510520760 is Nov 12th 3:06pm CT stopped transfrring LHe.
+Notable events within flowmeter data:
+1510520760 is Nov 12th 15:06pm CT stopped transfrring LHe.
+1510527583 is Nov 12th 16:59 ramping started
 1510854954 is Nov 16th at 11:56 (55 is when topping off started but Whisper was recorded during this time). 
 
 
@@ -25,6 +33,7 @@ This should be a good time as the start for the integration
 
 
 Liquid Helium weight that fills the dewar is about 68.75 lbs or 31.25 kg
+Time to charge the magnet. Power supply at 5V and Inductor of ~200H for current from 0 to 75A, then power supply at 3V for 75 to 91A. Total time ~1 hour. 
 
 This weight is not necessarily all boiled off in the middle of the test. However, the Whisper data observes the magnet (which is topped off after turned off) from Nov 16th 11:55 to end of Whisper data maybe?
 
