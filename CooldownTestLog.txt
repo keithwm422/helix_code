@@ -1,43 +1,348 @@
-#First is to describe from the wiki what wwas setup  before the readout started( first measurment from Whisper data is November 10th 9:50pm (log under Cooldown tests has this line in it "Setup magnet pressure sensors to be readout over night ").
+[++Sensored for Content++]
 
-#First log is November 8th (Cooling the magnet with LN2). 
-#The Whisper Flow Meter data used here is after the initial cool down of the magnet system with LN2. 
-#"stack relief pressure valve is 1PSI " at 13:10
-# Pressure reading from the magnet is at 2.5 PSI 
-# Minigoose sensors were installed onto the magnet skin in 6 different locations
-#See "pressure in magnet is reading" multiple times
+[++November 8th (Cooling the Magnet with LN2)++]
 
-#unixtime(s)  event
-Whisper data starts at Friday November 10th 9:50PM ET time from unix timestamp
-Timestampe is 1510368615.18
-Need to subtract from every time element this timestamp above to get to seconds after test started. 
+'''13:10''' 
+* Started putting LN2 into the distant input.  
+* Shield and stack outputs were closed
+* The stack relief pressure valve is 1PSI 
+'''13:18'''
+* Pressure reading form the magnet is at 2.5 PSI
+'''13:23'''
+* 1PSI relief valve was taken off 
+'''14:49'''
+* The 1 inch stack relief valve hole has developed a nice plume
+'''15:55'''
+* Noticed that the Magnet power supply has the wrong plug (ordered an adapter)
+'''16:20'''
+* Dewar started whistling 
+* Detached the dewar and went to refill it 
+* Installed Minigoose sensors onto the magnet skin in 6 different locations 
+'''17:08'''
+* Attached the refilled LN2 Dewar and started pushing LN2 again. 
+'''19:45'''
+* Removed LN2 fill tube from the stack 
+* Plugged the distant fill hole used for LN2 (Needed to replace the O-ring on the port)
+* Opened valves to allow flow through the flow meters after the stack and shield and reinstalled the 1PSI relief valve for the stack 
+'''20:11''' 
+* Switch the stack relief valve from 1PSI to 5PSI to allow gas to flow out of the flow meter relief valve which is also ~1PSI.
+* Shut stack vent flow meter to allow all flow over the shield 
+'''20:25'''
+* Magnet was left to sit over night with all exhaust flowing over the shield 
+* Pressure in the magnet is reading 1.6 PSI 
 
 
-Whisper data ends Tuesday November 21st at 3:46PM ET time from unix timestamp
+[++November 9th (Flushing the LN2 and Filling with LHe)++]
 
-Dewar weights from wiki:
-Unix, CT, weight
-1510509463, Nov12th11:57, 827.8 lbs
-1510512883, Nov12th12:54, 782.2 lbs
-1510520803, Nov12th15:06, 765.0 lbs
-1510854943, Nov16th11:55, 766.16 lbs
- Nov16th11:55, 741.11 lbs
+'''08:45''' 
+Arrived 
+* Checked the flow meter : 4.83 SLPM 
+* Pressure in magnet is still 1.6 PSI
+'''09:00'''
+* Setup up the gas lines to flush the magnet with N2 gas and push the LN2 out. 
+** Took relief valve off and attached the Dewar to the farside fill port again 
+** Opened the vent output on the LN2 Dewar 
+** Fill tubes when pushed in full have 2 inches of small tube sticking out 
+** Attached gas line to the near side input 
+'''09:15'''
+* Attached regulator to the N2 gas cylinder and ran gas pipe to it
+* Set regulator to 5PSI output and opened up the flow valves
+* Flow out shows Helium CFH 75 (note there is not N2 reading on the flow meter)
+'''09:31'''
+* Increased regulator output to 10PSI
+* Flow is now at Helium CFH 100 
+'''09:32''' 
+* Discovered a gas leak on the fill port on the magnet so gas was turned off. Looking closer the o rings are missing from the fill ports. 
+* The O-ring gasket was installed so that O-rings could fall in when inserting the fill tube. 
+* We swapped the gasket ring so that they are less likely to fall in. 
+'''09:46''' 
+* Started N2 gas again and leak is fixed 
+* Pressure is 10 PSI and flow is still 100 CFH 
+'''09:50'''
+* Magnet Pressure is up to .75 PSI now
+* Opened the Dewar fluid valve (mistakenly left closed)
+'''09:55'''
+* Uped the gas pressure again to 15PSI 
+* Flow rate tops out the flowmeter
+'''10:45'''
+* Pressure in the magnet is now up to 2.8 PSI 
+* LN2 is now flowing into the dewar now 
+'''11:15''' 
+* Pressure in the magnet has leveled off at 2.9 PSI 
+'''12:15'''
+* New Quench port developed a small leak and some iced fromed on the o ring
+* Turned off the N2 gas
+* Took the flange off by unscrewing the 3 screws and used a heat gun to melt the ice that had formed on the flange. 
+* Flange was put back on and the N2 gas turned back on
+* Currently the N2 pressure is 13.5 PSI
+'''12:25'''
+* Backed the N2 gas pressure to 10PSI
+'''12:40'''
+* New Quench port developed a small leak and some iced formed on the o ring
+* Turned off the N2 gas
+* Removed the flange and turned it around to see if that helps
+* Magnet pressure got down to 0.5 PSI during the swap
+'''12:44'''
+* Turn the N2 gas pressure to 10PSI again 
+* Flow meter adjusted so that it is 50 to try and keep the magnet pressure around 2 PSI 
+'''12:45'''
+* Magnet pressure back up to 2PSI
+'''12:51'''
+* Flow meter adjusted so that it is 25 to try and keep the magnet pressure around 2 PSI 
+'''13:10'''
+* Magnet is still sitting pretty at 2PSI 
+'''15:51'''
+* Magnet pressure dropped to 1PSI far side
+* N2 gas turned off and will swap to other side
+'''16:08'''
+* Swapped the LN2 and N2 gas lines. (now N2 is distant and LN2 out is near) 
+* Turned the N2 pressure 18PSI 
+'''16:30'''
+* Magnet has developed a high pitch whine from the N2 gas tube
+* Magnet pressure is back up to 2PSI
+'''17:10'''
+* First N2 gas cylinder is running low 
+* Swapped to a second cylinder
+'''19:10'''
+* Pressure started to drop in magnet and a whining sound started
+* Preparing to detach the N2 and LN2 to prepair for filling with LHe
+'''20:00'''
+* Started putting LHe into the near side port.
+* O rings were put on properly but first shoved up onto the fill tube so they would not fall in. 
+* The LHe dewar was lifted so we could track the weight using a scale. 
+* 1" Pressure relief 5PSI valve was taken off to allow gas to He to vent unimpeded. 
+* We tried using the 4PSI heater setting on the HE dewar but it didn't seem to work so we switch the to 8PSI setting which seemed good.
+* Plume that formed out of the stack relief port was -196 C. 
+'''21:47'''
+* The first LHe dewar has been emptied.
+* Fill ports were capped off and sealed with the bar. 
+* 1" 5PSI relief valve was put back on 
+* Flow was adjusted so that about 90% of the flow is over the shield and 10% is over the stack. 
+* Flowmeter is showing 35 LPM LHE. 
+* Magnet PSI is up to 2.5 PSI.
+* Magnet is being left to chill overnight 
 
-Notable events within flowmeter data:
-1510520760 is Nov 12th 15:06pm CT stopped transfrring LHe.
-1510527583 is Nov 12th 16:59 ramping started
-1510854954 is Nov 16th at 11:56 (55 is when topping off started but Whisper was recorded during this time). 
+[++November 10th (More Cooling with LHe)++]
+
+'''09:07'''
+* Arrived and Magnet is sitting happy with 2.2 PSI pressure 
+* Flow meter is reading 28 LPM  
+'''09:11'''
+* Adjusting the flow to the shield and stack so it is closer to 97% shield and 3% stack
+'''10:32'''
+* Hooked up the second LHe Dewar to near side 
+* Removed the stack relief 5PSI valve. 
+* Started putting in more LHE
+* This Dewar seems to regulate the 4PSI setting correctly so we are using that
+'''10:54'''
+* Level reading has reached 110 after adding ~30 lbs from the dewar
+* Shortly after the magnet was full 
+* We removed the LHe fill lines and capped off the fill holes
+* 5PSI stack relief valve was put back on and the flow pushed onto the stack and shield again
+'''14:49'''
+* Still monitoring the flow and temps of the magnet 
+* The shield temperature is still dropping however slowly 
+'''16:10'''
+*David left to get supplies to make an adapter for the magnet power supply 
+'''16:30'''
+*Adjusted the flow so it is more over the shield. It is currently stack .3 and shield 13.
+'''17:20''' 
+* Switch to absolute pressure relief valve 15.7 PSIA instead of relative 1PSI.
+'''17:45'''
+* David is back with power goodies.
+* Going to make the cable for the Magnet power supply. 
+'''18:15'''
+* David's cable was a rousing success 
+* The Magnet power supply us plugged in and turned on 
+* Going to spend the rest of the night setting up sensors to be read automatically.  
+'''21:48'''
+* Setup magnet pressure sensors to be readout over night 
+* Heading out for the night
+* Magnet pressure is 2.5 PSI and the flow rate is 23.6 
+ 
+[++November 11th (Testing the Current leads/ Charging)++]
+
+'''9:10'''
+*Arrived 
+* Magnet still looks good and pressure was still around 2.5 PSI 
+* Shield temp has gone up a little over night 
+
+'''10:20'''
+* Extracted Current leads a little to see if it effects the boil off rate. 
+* The leads were extracted up until the copper part of the lead started showing
+* Starting to clean up everything around the lab that has accumulated over the last 2 days
+
+'''12:50'''
+* Pushed current leads back in. Having the current leads retracted reduced the boil off rate by < 1 lpm.
+* Making sure that system is stable prior to ramping up magnet.
+
+'''17:08'''
+*Magnet area has been cleaned up 
+*Cameras installed and have SD cards in them 
+* Power supply has been hooked up to the magnet through the diode box and the current limits set 
+* Current limits assume 206 H and 5V limit between 0V and 75V and a 3V limit after 75V
+* Flow has been diverted over the stack so it is now 50% stack 50% shield 
+'''17:10''' 
+Starting Ramping the Magnet 
+'''18:51'''
+* Opened 1 psig relief valve isolation on outlet of flow meters to reduce pressure due to current leads.
+'''19:20'''
+* Charging automatically paused at low sweep limit of 70 A. 
+'''19:23'''
+* Changed from 5 psig to 1 psig relief valve on 1" stack relief port to keep cryostat pressure from rising at high currents.
+'''19:25'''
+* Continued magnet ramping towards high sweep limit
+'''20:03'''
+* Upper sweep limit reached at 91.5 A
+'''20:04'''
+* Secured persistent switch heater and verified that there is 0 V across the magnet voltage taps.
+'''20:05'''
+* Fast ramped power supply to 0 A. No change in magnetic field at magnet.
+'''20:24'''
+* Fast ramped power supply to 91.5 A.
+'''20:26'''
+* Turned on persistence switch and started ramping to 0.
+'''22:05'''
+* Magnet current reached zero.
+* Turned off persistence switch. 
+
+[++November 12th (Topin off dat Magnet and Magnet 2:the Rerampening)++]
+
+'''24:05'''
+* Left for the night magnet pressure is sitting at 2.4 PSI
+'''11:57'''
+* Starting to top of magnet installed all the plumbing 
+* Dewar is at 827.8 lbs
+
+'''12:09'''
+*Started Transferring helium 
+
+'''12:54'''
+* Magnet started making a whistling noise signalling it was full 
+* Stopped transfer 
+* Dewar is now at 782.2 lbs
+* Level sensors 1 was 138 and level sensor 2 was 94.4
+'''14:38''' 
+* Starting the 2nd top off 
+* Installing all the plumbing. Dewar is at 774.
+'''15:06'''
+* Magnet started making a whistling noise signalling it was full 
+* Stopped transfer 
+* Dewar is now at 765.0 lbs
+* Level sensors 1 was 137 and level sensor 2 was 98.3
+'''15:35'''
+* Preparing to charge the magnet.
+* Bypassed float meters and and opened stack and shield flow throttles to full to increase cooling to stack.
+'''16:59'''
+*Started ramping
+'''18:01'''
+* Reached 75 Amps through the coils 
+* Turned off the persistant switch heater and waited for the voltage on the magnet to go to 0 V
+* Fast ramped the supply down to 0  
+'''18:10'''
+* Fast Ramped the supply up to the magnet current of 75 Amps 
+'''18.13'''
+* Turned on the Pesistance switch heater and watched the voltage on the magnet taps increase
+* Started ramping to 91.5 Amps with the slow speed 
+'''18:35''' 
+* Current has reached 91.5 Amps in the magnet 
+* Turned off persistance switch and waited for voltage on magnet taps to go to 0 Vs 
+'''18:37'''
+* Fast ramped the supply down to 0 Amps
+'''18:44'''
+* Replaced the 1" 1PSI stack relief valve with the 5PSI version 
+* Adjusted flows across stack and shield so that it was 10% stack and 90% shield 
+'''20:17'''
+* Bumped up the flow over the stack since the magnet was at 2.7 PSI 
+* Magnet pressure is back down to 2.5 PSI 
+'''21:37'''
+* Magnet pressure is looking happy at 2.4 PSI still
+
+[++November 13th (Scan till you can't scan no more)++]
+
+'''02:22'''
+* Heading out now Magnet is happy and a little over 2 PSI
+'''9:30'''
+* Adjusted flow so it was more over the shield ~97% and 3% over the stack
+* Pressure went back up to 2.6 PSI
+'''22:25''' 
+* Leaving for the night left a ~8 hour scan of the magnet running 
+* Magnet pressure is sitting happy at 2.5 PSI  
+
+[++November 14th (Flows change but fields don't)++]
+
+'''14:00'''
+* Setting the flow so it is all over the stack 
+* Stack flowmeter is bypassed 
+** Ice that had formed on the shield output line started to melt 
+** Over the next couple hours it continued to melt and the stack started decreasing in temperature
+** Pressure dropped to 1.9 PSI in the magnet
+'''23:30'''
+* Stack is getting below 0C at the top and the pressure has started to increase slightly 
+* Stack has started to frost up 
+'''23:58'''
+* Calling it a night 
+** Another long scan is running 
+** Magnet is at 2.1 PSI 
 
 
-This should be a good time as the start for the integration
+[++November 15th (Thermodynamics is hard)++]
+'''10:00'''
+* Pressures and flow rates look like they increased overnight 
+** Pressure is now back up to 2.4 PSI in the magnet 
+** Flow rate is back up to 18.29
+* Starting another 10 hour scan with a z offset to double the points
+'''15:52'''
+* Pressure is back up in the magnet to 2.7 PSI 
+** The large quench port looks like it developed a small leak (shown by a small area at the edge where the frost had been blown off)
+** To reduce the pressure I tried opening flow up on the shield which didn't seem to help 
+** I then open the knob to the other 1PSI pressure relief valve which seems to have help drop the pressure 
+'''16:05''' 
+* Pressure in the magnet has dropped back down to 2.5 PSI 
+** Trying to see if I can get the quench port leak to stop
 
+'''19:33''' 
+* Changing flows so that it is 75% over the stack and 25% over the shield
+** Note I Briefly ~ 2 minutes I ran 90% over the shield to cool it down a bit and cause I was messing with the knobs
+** To get the proper flows I changed the whisper to read LPM air and then adjusted the flow over the shield so that it was 25% of that number
+** Going to leave at at this setting for the time being 
+'''22:31'''
+* Pressure in the magnet is back down to 1.9 PSI 
+* Closing the 1PSI relatice relief valve we opened to reduce the pressure before for consistency 
+** This is how we ran in the other modes
 
-Liquid Helium weight that fills the dewar is about 68.75 lbs or 31.25 kg
-Time to charge the magnet. Power supply at 5V and Inductor of ~200H for current from 0 to 75A, then power supply at 3V for 75 to 91A. Total time ~1 hour. 
+[++November 16th (So long and thanks for all the gauss)++]
+'''1:51'''
+*Magnet pressure is back up to 2.5 PSI 
+** Output for both stack and shield are still wet and developing a little frost 
+*Started one last scan for the night should take 4 hours. 
+'''9:55'''
+*Flow to the stack 
+**replaced the 1" 5 PSI relief with the 1PSI 
+** Opened isolation to additional 1 psig relief valve
+**Fast ramped the supply current to 91.5 A 
+'''10:00'''
+* Turned persistence heater switch on 
+** Start Ramping down
+'''11:30'''
+*Magnet has finished ramping down
+** Turned persistence switch on 
+'''11:55'''
+* Starting the toping off procedure 
+**Dewar weight at start 766.16 lbs
+**Dewar weight when done 741.11 lbs
+**Fill level went up to 68.8 on sensor 1
+''' 12:15''' 
+* Packed up scanner
+'''12:27'''
+* Opened up the loading dock door 
+'''14:00'''
+* Closed loading dock door
+'''14:31'''
+* Returned flow to 75% stack 25% shield.
+* Shut isolation to additional 1 psig relief
 
-This weight is not necessarily all boiled off in the middle of the test. However, the Whisper data observes the magnet (which is topped off after turned off) from Nov 16th 11:55 to end of Whisper data maybe?
+[++November 17th (Flow ratio testing)++]
 
-Also, it looks like topping off procedure on Nov 16th at 11:55 (1510854900) has recorded dewar weights. 
-Therefore, if the topping off procedure before that was from Nov 12th,
-then we have Nov 12th -16th boiled off a known amount in weight of dewar and can look at flow meters also!
-
+'''15:20'''
+* Adjusted boil off to 50% stack / 50% shield.
