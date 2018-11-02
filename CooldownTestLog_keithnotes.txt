@@ -15,18 +15,31 @@ Need to subtract from every time element this timestamp above to get to seconds 
 
 Whisper data ends Tuesday November 21st at 3:46PM ET time from unix timestamp
 
+Dewar Levels from wiki: 
+1510512883, Nov12th12:54, sensor1 138 and sensor2 94.4
+1510520803, Nov12th15:06, sensor1 137 and sensor2 98.3
+
+
 Dewar weights from wiki:
 Unix, CT, weight
 1510509463, Nov12th11:57, 827.8 lbs
 1510512883, Nov12th12:54, 782.2 lbs
+1510519108, Nov12th14:38, 774 lbs
 1510520803, Nov12th15:06, 765.0 lbs
-1510854943, Nov16th11:55, 766.16 lbs
- Nov16th11:55, 741.11 lbs
+between 11:30 and 11:55 the following were made. 
+1510853428, Nov16th11:30, 766.16 lbs
+1510854928, Nov16th11:55, 741.11 lbs
 
 Notable events within flowmeter data:
-1510520760 is Nov 12th 15:06pm CT stopped transfrring LHe.
+
+ is Nov 11th 17:10 CT started ramping magnet (choice 1)
+ is Nov 11th 18:51 CT started ramping magnet (choice 2)
+ is Nov 11th 20:04 CT 0V across magent taps, power supply off? persistance switch "ON"
+ is Nov 12th 12:09 CT started transferring LHe.
+ is Nov 12th 12:54 CT stopped transfer, full.
+1510520760 is Nov 12th 15:06 CT stopped transfrring LHe.
 1510527583 is Nov 12th 16:59 ramping started
-1510854954 is Nov 16th at 11:56 (55 is when topping off started but Whisper was recorded during this time). 
+1510854954 is Nov 16th 11:56 (55 is when topping off started but Whisper was recorded during this time). 
 
 
 This should be a good time as the start for the integration
