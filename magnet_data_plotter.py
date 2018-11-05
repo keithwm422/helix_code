@@ -139,7 +139,7 @@ def plot_file_all(seq):
 
 # need to put these lines (but not the labels) on each subplot. Need to resize the text and add more lines for other notable things during data taking. 
     xposition = [data_list[0,time0], data_list[0,time2], data_list[0,time1], data_list[0,-1]] # these will be values in hours.
-    labels=['Ramp start, FULL','Ramp end, FULL','end of data']
+    labels=['Ramp start, FULL', 'start ramping ','Ramp end, FULL','end of data']
     i=0
     for xc in xposition:
       plt.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
@@ -210,4 +210,49 @@ def plot_file_magnet_on(seq):
 #    plt.show()
 
 #def integrate_num_flux(seq):
+
+def load_levels_near(seq):
+    datanear=numpy.genfromtxt('lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
+    timenear = datanear['time']
+    lvlnear=datanear['StackSideLevelcm']
+# convert unix time to seconds after tests started
+    a=numpy.empty(len(timenear))
+    a.fill(timenear[0])
+    timenear=timenear-a    
+# convert to hours after test started
+    timenear= numpy.true_divide(timenear,3600.0)
+    data_list=numpy.array([timenear,lvlnear])
+    return data_list
+
+def load_levels_far(seq):
+    datafar=numpy.genfromtxt('lvlSensorFar.csv', dtype=float, delimiter=',', names=True)
+    timefar=datafar['time']
+    lvlfar=datafar['NonStackSideLevelcm']
+# convert unix time to seconds after tests started
+    b=numpy.empty(len(timefar))
+    b.fill(timefar[0])
+    timefar=timefar-b    
+# convert to hours after test started
+    timefar= numpy.true_divide(timefar,3600.0)
+    data_list=numpy.array([timefar,lvlfar])
+    return data_list
+
     
+def plot_levels_all(seq):
+    data_listnear=load_levels_near(1);
+    data_listfar=load_levels_far(1);
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+#    plt.scatter(data_list[0,:],data_list[1,:],s=4)
+    plt.scatter(data_listnear[0,:], data_listnear[1,:], c='b', marker='s', label='Near Sensor')
+    plt.scatter(data_listfar[0,:], data_listfar[1,:], c='r', marker='s', label='Far Sensor')
+#    ax1 = fig.add_subplot(111)
+#    ax1.scatter(data_list[0,:], data_list[1,:], s=4, c='b', marker="s", label='near sensor')
+#    ax1.scatter(data_list[0,:],data_list[2,:], s=4, c='r', marker="o", label='far sensor')
+
+#    plt.legend(loc='upper left');
+    plt.title('Magnet Thermal Test, near and far sensor levels')
+    plt.ylabel('Level (cm)')
+    plt.xlabel('Time (hours)')
+    fig.savefig('magnet_lvls_vs_time.png')
+
+
