@@ -16,7 +16,7 @@ Need to subtract from every time element this timestamp above to get to seconds 
 Whisper data ends Tuesday November 21st at 3:46PM ET time from unix timestamp
 
 Dewar Levels from wiki: also have them from csv files
-, Nov10th10:54, level reading 110 after adding ~30lbs from dewar
+1510332849, Nov10th10:54, level reading 110 after adding ~30lbs from dewar
 1510512883, Nov12th12:54, sensor1 138 and sensor2 94.4
 1510520803, Nov12th15:06, sensor1 137 and sensor2 98.3
 
@@ -36,12 +36,12 @@ between 11:30 and 11:55 the following were made.
 Notable events within flowmeter data:
 
  is Nov CT 
- is Nov 11th 17:10 CT started ramping magnet (choice 1)
- is Nov 11th 18:51 CT started ramping magnet (choice 2)
- is Nov 11th 20:04 CT 0V across magent taps, power supply off? persistance switch "ON"
- is Nov 12th 11:57 CT starting to top off magnet and plumbing installed
- is Nov 12th 12:09 CT started transferring LHe.
- is Nov 12th 12:54 CT stopped transfer, full.
+1510441809 is Nov 11th 17:10 CT started ramping magnet (choice 1)
+1510447869 is Nov 11th 18:51 CT started ramping magnet (choice 2)
+1510452249 is Nov 11th 20:04 CT 0V across magent taps, power supply off? persistance switch "ON"
+1510509429 is Nov 12th 11:57 CT starting to top off magnet and plumbing installed
+1510510149 is Nov 12th 12:09 CT started transferring LHe.
+1510512849 is Nov 12th 12:54 CT stopped transfer, full.
 1510520760 is Nov 12th 15:06 CT stopped transfrring LHe.
 1510527583 is Nov 12th 16:59 ramping started
 1510854954 is Nov 16th 11:56 (55 is when topping off started but Whisper was recorded during this time). 
