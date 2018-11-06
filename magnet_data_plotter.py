@@ -126,7 +126,7 @@ def integrate_mass_range(seq):
     print('total mass flowed out from Nov16th to Nov 21st is {}'.format(tot)) 
 
 
-def plot_file_all(seq):
+def plot_flow_all(seq):
     data_list=load_file(1);
     time0=2170
     time1=251968
@@ -175,7 +175,7 @@ def plot_file_all(seq):
 #def integrate_num_flux(seq):
     
 
-def plot_file_magnet_on(seq):
+def plot_flow_magnet_on(seq):
     data_list=load_file(1);
 #    plt.yscale('log')
     fig=plt.figure(figsize=(10, 8), dpi=800,)
@@ -255,4 +255,69 @@ def plot_levels_all(seq):
     plt.xlabel('Time (hours)')
     fig.savefig('magnet_lvls_vs_time.png')
 
+
+def plot_flow_and_levels(seq):
+# load lvlnear data
+    datanear=numpy.genfromtxt('lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
+    timenear = datanear['time']
+    lvlnear=datanear['StackSideLevelcm']
+#load lvlfar data
+    datafar=numpy.genfromtxt('lvlSensorFar.csv', dtype=float, delimiter=',', names=True)
+    timefar=datafar['time']
+    lvlfar=datafar['NonStackSideLevelcm']
+#load flow data
+    data=numpy.genfromtxt('WhisperData_Cleaned.csv', dtype=float, delimiter=',', names=True)
+    timeflow = data['time_s']
+    pressure = data['pressure_PSI']
+    temp = data['temperatureC']
+    volume = data['volume_flow_LPM']
+    mass = data['mass_flow']
+
+# convert unix time to seconds after tests started for all arrays of time, each array of time has different lengths since data was poorly recorded.
+   # make array of same length as each time array
+    a=numpy.empty(len(timeflow))
+    b=numpy.empty(len(timenear))
+    c=numpy.empty(len(timefar))
+   # fill each array of time with entry of earliest unix time (timenear[0])
+    a.fill(timenear[0])
+    b.fill(timenear[0])
+    c.fill(timenear[0])
+  # subtract each start time array (a,b,c) from the corresponding time array.
+    timeflow=timeflow-a
+    timenear=timenear-b
+    timefar=timefar-c
+# convert to hours after test started
+    timeflow= numpy.true_divide(timeflow,3600.0)
+    timenear= numpy.true_divide(timenear,3600.0)
+    timefar= numpy.true_divide(timefar,3600.0)
+
+# one big numpy array for the flows
+    data_list=numpy.array([timeflow,pressure,temp,volume,mass])
+# array for lvl near
+    data_near=numpy.array([timenear,lvlnear])
+# array for lvl far
+    data_far=numpy.array([timefar,lvlfar])
+
+
+ 
+    fig=plt.figure(figsize=(10, 8), dpi=800,)
+
+    ax_flow=plt.subplot(311)
+    ax_flow.scatter(data_list[0,:],data_list[3,:],s=4)
+    ax_flow.set_xlim([0,300])
+    ax_flow.set_ylabel('Volume (LPM)')
+
+    ax_near=plt.subplot(312)
+    ax_near.scatter(data_near[0,:],data_near[1,:],s=4)
+    ax_near.set_ylabel('Level Near(cm)')
+    ax_near.set_xlim([0,300])
+
+    ax_far=plt.subplot(313)
+    ax_far.scatter(data_far[0,:],data_far[1,:],s=4)
+    ax_far.set_ylabel('Level Far(cm)')
+    ax_far.set_xlim([0,300])
+
+    ax_far.set_xlabel('Time (hours)')
+#    plt.tight_layout()
+    fig.savefig('magnet_flowmeterquantities_vs_time.png')
 
