@@ -270,41 +270,64 @@ def plot_flow_and_levels(seq):
     timeflow = data['time_s']
     pressure = data['pressure_PSI']
     temp = data['temperatureC']
-    volume = data['volume_flow_LPM']
+    flow = data['volume_flow_LPM']
     mass = data['mass_flow']
-
+#load event times
+    datanotes=numpy.genfromtxt('notable_LHe_events.csv', delimiter=',', names=True)
+    xposition=datanotes['time_event']
+    labels=datanotes['note']
 # convert unix time to seconds after tests started for all arrays of time, each array of time has different lengths since data was poorly recorded.
    # make array of same length as each time array
     a=numpy.empty(len(timeflow))
     b=numpy.empty(len(timenear))
     c=numpy.empty(len(timefar))
+    d=numpy.empty(len(xposition))
    # fill each array of time with entry of earliest unix time (timenear[0])
     a.fill(timenear[0])
     b.fill(timenear[0])
     c.fill(timenear[0])
+    d.fill(timenear[0])
   # subtract each start time array (a,b,c) from the corresponding time array.
     timeflow=timeflow-a
     timenear=timenear-b
     timefar=timefar-c
+    xposition=xposition-d
 # convert to hours after test started
     timeflow= numpy.true_divide(timeflow,3600.0)
     timenear= numpy.true_divide(timenear,3600.0)
     timefar= numpy.true_divide(timefar,3600.0)
+    xposition= numpy.true_divide(xposition,3600.0)
+#calculate the hour marks for notable events for vertical lines
+#    time1=1510279237
+    print xposition
+#    xposition = [data_list[0,time0], data_list[0,time2], data_list[0,time1], data_list[0,-1]] # these will be values in hours.
+#    labels=['Ramp start, FULL', 'start ramping ','Ramp end, FULL','end of data']
 
 # one big numpy array for the flows
-    data_list=numpy.array([timeflow,pressure,temp,volume,mass])
+    data_list=numpy.array([timeflow,pressure,temp,flow,mass])
 # array for lvl near
     data_near=numpy.array([timenear,lvlnear])
 # array for lvl far
     data_far=numpy.array([timefar,lvlfar])
 
-
+#integrate the volume flow to get total volume flowed out. 
+    #need to think if this is for entire time or part of time
+#mark on graphs when LHe was added ~1 hour or so to transfer, "topping off" procedure
  
+    #first, mark on the graph where those LHE times are....
     fig=plt.figure(figsize=(10, 8), dpi=800,)
 
     ax_flow=plt.subplot(311)
     ax_flow.scatter(data_list[0,:],data_list[3,:],s=4)
+#put the lines for the test details here
+# need to put these lines (but not the labels) on each subplot. Need to resize the text and add more lines for other notable things during data taking. 
+    i=0
+    for xc in xposition:
+      ax_flow.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
+      ax_flow.text(xc+1, 15,labels[i], rotation=90, fontsize=6)
+      i+=1
     ax_flow.set_xlim([0,300])
+
     ax_flow.set_ylabel('Volume (LPM)')
 
     ax_near=plt.subplot(312)

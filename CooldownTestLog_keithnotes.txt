@@ -23,6 +23,17 @@ Dewar Levels from wiki: also have them from csv files
 csv file dewar levels:
 starts on Nov 9th at 19:10 CT
 
+#lines to put in plot_flow_and_levels
+1510279237 LHe FIRST PUT in at 20:00 on Nov 9th CT
+1510285657 LHe 1st dewar has been emptied 21:47 on Nov 9th CT
+10:32 Nov 10th LHe started being filled again 
+10:54 Nov 10th magnet wa full ~30lbs from dewar
+11:57 or 12:09 Nov 12th  LHe topped off 
+12:54 Nov 12th Stopped transfer
+14:38 Nov 12th 2nd top off 
+15:06 Nov 12th Stopped tranfer
+11:55 Nov 16th top off procedure started
+
 Dewar weights from wiki:
 Unix, CT, weight
 1510509463, Nov12th11:57, 827.8 lbs
