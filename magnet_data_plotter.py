@@ -299,7 +299,7 @@ def plot_flow_and_levels(seq):
     xposition= numpy.true_divide(xposition,3600.0)
 #calculate the hour marks for notable events for vertical lines
 #    time1=1510279237
-    print xposition
+#    print xposition
 #    xposition = [data_list[0,time0], data_list[0,time2], data_list[0,time1], data_list[0,-1]] # these will be values in hours.
 #    labels=['Ramp start, FULL', 'start ramping ','Ramp end, FULL','end of data']
 
@@ -324,7 +324,7 @@ def plot_flow_and_levels(seq):
     i=0
     for xc in xposition:
       ax_flow.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
-      ax_flow.text(xc+1, 15,labels[i], rotation=90, fontsize=6)
+#      ax_flow.text(xc+1, 15,labels[i], rotation=90, fontsize=6)
       i+=1
     ax_flow.set_xlim([0,300])
 
