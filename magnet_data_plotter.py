@@ -1,9 +1,10 @@
 # Python code to plot the data from HELIX magnet test. Reads in .csv file downloaded form the HELIX wiki and plots versus time the quantities.  
+# New code is to spline the levels on the magnet during the test to then take the derivative and plot as a function of time. 
 # Author Keith McBride 10/16/18
 
 import matplotlib.pyplot as plt
 import numpy
-
+from scipy import interpolate
 def isfloat(value):
   try:
     float(value)
@@ -224,6 +225,44 @@ def load_levels_near(seq):
     data_list=numpy.array([timenear,lvlnear])
     return data_list
 
+def spline_levels_near(seq):
+# get the data
+    data_list=load_levels_near(1)
+# convert back to minutes
+    time_mins= numpy.true_divide(data_list[0,:],0.01666666666)
+    data_list=numpy.array([time_mins,data_list[1,:]])
+# spline section
+    #interpolate the data using spline of order 3 (cubic by default)
+    tck, fp, ier, msg= interpolate.splrep(data_list[0,:], data_list[1,:], s=0, full_output=True)
+    #new array for x-axis values to evaluate the calculated spline at
+    time_spline=numpy.arange(0, data_list[0,-1], 0.1)
+    #get the yvalues from the found spline at the xvalues from the new array above. 
+    lvl_spline=interpolate.splev(time_spline, tck, der=0)
+    lvl_der_spline=interpolate.splev(time_spline, tck, der=1)
+#plot the spline
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(time_spline,lvl_spline,c='r',marker='s', label='Near splined values')    
+    plt.scatter(data_list[0,:], data_list[1,:], c='b', marker='s', label='Near Sensor data')
+    plt.legend(loc='upper right');
+    plt.title('Magnet Thermal Test, near and splined near sensor levels')
+    plt.ylabel('Level (cm)')
+    plt.xlabel('Time (minutes)')
+    fig.savefig('magnet_lvl_data_and_spline_vs_time.png')
+    print (ier)
+    print ('fp' ,fp)
+    der_splined=numpy.array([time_spline,lvl_der_spline])
+    return der_splined
+#
+def spline_der_levels_near(seq):
+    der=spline_levels_near(1)
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(der[0,:], der[1,:], c='b', marker='s', label='Near Sensor derivative')
+    plt.title('Magnet Thermal Test, splined near sensor level derivative')
+    plt.ylabel('Level derivative (cm per minute)')
+    plt.xlabel('Time (mins)')
+    fig.savefig('magnet_lvl_spline_der_vs_time.png')
+
+    
 def load_levels_far(seq):
     datafar=numpy.genfromtxt('lvlSensorFar.csv', dtype=float, delimiter=',', names=True)
     timefar=datafar['time']
@@ -249,7 +288,7 @@ def plot_levels_all(seq):
 #    ax1.scatter(data_list[0,:], data_list[1,:], s=4, c='b', marker="s", label='near sensor')
 #    ax1.scatter(data_list[0,:],data_list[2,:], s=4, c='r', marker="o", label='far sensor')
 
-#    plt.legend(loc='upper left');
+    plt.legend(loc='upper left');
     plt.title('Magnet Thermal Test, near and far sensor levels')
     plt.ylabel('Level (cm)')
     plt.xlabel('Time (hours)')
