@@ -23,8 +23,15 @@ def load_file(seq):
     time= numpy.true_divide(time,3600.0)
     pressure = data['pressure_PSI']
     temp = data['temperatureC']
-    volume = data['volume_flow_LPM']
+    flow = data['volume_flow_LPM']
     mass = data['mass_flow']
+    #calculate the mass flow from the volume flow
+      #convert temp to kelvin
+    kelvin=numpy.empty(len(temp))
+    kelvin.fill(273.15)
+    temp=temp+kelvin
+    masscalc = 4.0/(1000.0*1.20675)*numpy.true_divide(pressure,temp) #molar mass * 1000 * Pressure/(R[PSIliters/(kelvinmol)]*Temp)
+    masscalc=numpy.multiply(masscalc,flow)
 #Can add plot code here to load and save the flux plot for debugging later for the user. will be helpful for HELIX to have this universal with labels. 
 #    data=numpy.array(data)
 #    i=0
@@ -35,7 +42,7 @@ def load_file(seq):
 #      volume.append(data[i][3])
 #      mass.append(data[i][4])
 #      i+=1
-    data_list=numpy.array([time,pressure,temp,volume,mass])
+    data_list=numpy.array([time,pressure,temp,flow,mass,masscalc])
     return data_list
 
 def calc_average_density(seq):
@@ -57,10 +64,10 @@ def calc_average_density(seq):
 def integrate_mass(seq):
     data_list=load_file(1)
     #convert time to minutes instead of hours
-    data_list[0,:]= numpy.true_divide(data_list[0,:],0.016666666667)
+    data_list[0,:]= 60.0*data_list[0,:]
     
     #integrate over time and report the value
-    tot=numpy.trapz(data_list[4,:],x=data_list[0,:])
+    tot=numpy.trapz(data_list[5,:],x=data_list[0,:])
 #    i=0
 #    tot=0
 #    while i<len(data_list[4,:]):
@@ -135,29 +142,32 @@ def plot_flow_all(seq):
 #    plt.yscale('log')
     fig=plt.figure(figsize=(10, 8), dpi=800,)
 
-    plt.subplot(411)
+    plt.subplot(511)
     plt.scatter(data_list[0,0:-1:60],data_list[1,0:-1:60], s=4)
 
 # need to put these lines (but not the labels) on each subplot. Need to resize the text and add more lines for other notable things during data taking. 
-    xposition = [data_list[0,time0], data_list[0,time2], data_list[0,time1], data_list[0,-1]] # these will be values in hours.
-    labels=['Ramp start, FULL', 'start ramping ','Ramp end, FULL','end of data']
-    i=0
-    for xc in xposition:
-      plt.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
-      plt.text(xc+1, 10, labels[i], rotation=90, fontsize=6)
-      i+=1
+#    xposition = [data_list[0,time0], data_list[0,time2], data_list[0,time1], data_list[0,-1]] # these will be values in hours.
+#    labels=['Ramp start, FULL', 'start ramping ','Ramp end, FULL','end of data']
+#    i=0
+#    for xc in xposition:
+#      plt.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
+#      plt.text(xc+1, 10, labels[i], rotation=90, fontsize=6)
+#      i+=1
 
     plt.title('Magnet Thermal Test')
     plt.ylabel('Pressure (PSI)')
-    plt.subplot(412)
+    plt.subplot(512)
     plt.scatter(data_list[0,0:-1:60],data_list[2,0:-1:60], s=4)
-    plt.ylabel('Temperature ($^\circ$C)')
-    plt.subplot(413)
+    plt.ylabel('Temperature (K)')
+    plt.subplot(513)
     plt.scatter(data_list[0,0:-1:60],data_list[3,0:-1:60], s=4)
     plt.ylabel('Volume (LPM)')
-    plt.subplot(414)
+    plt.subplot(514)
     plt.scatter(data_list[0,0:-1:60],data_list[4,0:-1:60], s=4)
     plt.ylabel('Mass (MPM)')
+    plt.subplot(515)
+    plt.scatter(data_list[0,0:-1:60],data_list[5,0:-1:60], s=4)
+    plt.ylabel('Mass (kgpm)')
     plt.xlabel('Time (hours)')
 
 
@@ -188,7 +198,7 @@ def plot_flow_magnet_on(seq):
     plt.ylabel('Pressure (PSI)')
     plt.subplot(412)
     plt.scatter(data_list[0,start:end],data_list[2,start:end],s=4)
-    plt.ylabel('Temperature ($^\circ$C)')
+    plt.ylabel('Temperature (K)')
     plt.subplot(413)
     plt.scatter(data_list[0,start:end],data_list[3,start:end],s=4)
     plt.ylabel('Volume (LPM)')
@@ -235,7 +245,7 @@ def spline_levels_near(seq):
     #interpolate the data using spline of order 3 (cubic by default)
     tck, fp, ier, msg= interpolate.splrep(data_list[0,:], data_list[1,:], s=0, full_output=True)
     #new array for x-axis values to evaluate the calculated spline at
-    time_spline=numpy.arange(0, data_list[0,-1], 0.1)
+    time_spline=numpy.arange(0, data_list[0,-1], 0.01)
     #get the yvalues from the found spline at the xvalues from the new array above. 
     lvl_spline=interpolate.splev(time_spline, tck, der=0)
     lvl_der_spline=interpolate.splev(time_spline, tck, der=1)
@@ -383,3 +393,65 @@ def plot_flow_and_levels(seq):
 #    plt.tight_layout()
     fig.savefig('magnet_flowmeterquantities_vs_time.png')
 
+def load_flows_zero_to_near_lvl_sensor(seq):
+# load lvlnear data
+    datanear=numpy.genfromtxt('lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
+    timenear = datanear['time']
+    lvlnear=datanear['StackSideLevelcm']
+#load flow data
+    data=numpy.genfromtxt('WhisperData_Cleaned.csv', dtype=float, delimiter=',', names=True)
+    timeflow = data['time_s']
+    pressure = data['pressure_PSI']
+    temp = data['temperatureC']
+    flow = data['volume_flow_LPM']
+    mass = data['mass_flow']
+    #calculate the mass flow from the volume flow
+      #convert temp to kelvin
+    kelvin=numpy.empty(len(temp))
+    kelvin.fill(273.15)
+    temp=temp+kelvin
+    masscalc = 4.0/(1000.0*1.20675)*numpy.true_divide(pressure,temp) #molar mass * 1000 * Pressure/(R[PSIliters/(kelvinmol)]*Temp)
+    masscalc=numpy.multiply(masscalc,flow)
+# convert unix time to seconds after tests started for all arrays of time, each array of time has different lengths since data was poorly recorded.
+   # make array of same length as each time array
+    a=numpy.empty(len(timeflow))
+    b=numpy.empty(len(timenear))
+   # fill each array of time with entry of earliest unix time (timenear[0])
+    a.fill(timenear[0])
+    b.fill(timenear[0])
+  # subtract each start time array (a,b,c) from the corresponding time array.
+    timeflow=timeflow-a
+    timenear=timenear-b
+# convert to hours after test started
+    timeflow= numpy.true_divide(timeflow,60.0)
+    timenear= numpy.true_divide(timenear,60.0)
+    data_list=numpy.array([timeflow,pressure,temp,flow,mass,masscalc])
+    return data_list
+
+def plot_mass_flow_and_level_der(seq):
+    der=spline_levels_near(1) # this loads the 2-d array of [0,:]= time (zeroed to near sensor start and in minutes) [1,:]= derivative of spline of level near sensor (cmpm)
+    flows=load_flows_zero_to_near_lvl_sensor(1)  # 5-d array with [0,:]=time (not zeroed to flow start and in minutes) [1,:]= pressure (PSI) [2,:]= temperature (Kelvin) [3,:]=volume flow (lpm) [4,:]= mass flow (? unknown units) [5,:]=mass flow calc from ideal gas law(kg per minute)
+    # set flows time to zeroed 
+    fig=plt.figure(figsize=(10, 8), dpi=800,)
+    plt.title('Magnet Thermal Test, splined near sensor level derivative')
+    ax_flow=plt.subplot(211)
+    ax_flow.scatter(flows[0,:],flows[5,:],s=4)
+    ax_flow.set_ylabel('Calculated massflow (kg per minute)')
+    ax_flow.set_xlim([0,18000])
+    ax_near=plt.subplot(212)
+    ax_near.scatter(der[0,:],der[1,:],s=4)
+    ax_near.set_xlim([0,18000])
+    ax_near.set_ylabel('Level Near derivative(cm per min)')
+    ax_near.set_xlabel('Time (mins)')
+    sum=0.0
+    i=0
+    while i<len(flows[0,:]):
+      if i==len(flows[0,:])-1: diff=0
+      else: diff=flows[0,i+1]-flows[0,i]
+      sum+=diff
+      i+=1
+    print (sum/len(flows[0,:]))
+#    plt.scatter(der[0,:], der[1,:], c='b', marker='s', label='Near Sensor derivative')
+#    plt.scatter(der[0,:], der[1,:], c='r', marker='s', label='Near Sensor derivative')
+    fig.savefig('magnet_mass_flow_calc_and_lvl_spline_der_vs_time.png')
+    
