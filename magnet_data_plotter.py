@@ -231,7 +231,7 @@ def load_levels_near(seq):
     a.fill(timenear[0])
     timenear=timenear-a    
 # convert to hours after test started
-    timenear= numpy.true_divide(timenear,3600.0)
+    timenear= numpy.true_divide(timenear,60.0)
     data_list=numpy.array([timenear,lvlnear])
     return data_list
 
@@ -245,7 +245,7 @@ def spline_levels_near(seq):
     #interpolate the data using spline of order 3 (cubic by default)
     tck, fp, ier, msg= interpolate.splrep(data_list[0,:], data_list[1,:], s=0, full_output=True)
     #new array for x-axis values to evaluate the calculated spline at
-    time_spline=numpy.arange(0, data_list[0,-1], 0.01)
+    time_spline=numpy.arange(0, data_list[0,-1], 0.1)
     #get the yvalues from the found spline at the xvalues from the new array above. 
     lvl_spline=interpolate.splev(time_spline, tck, der=0)
     lvl_der_spline=interpolate.splev(time_spline, tck, der=1)
@@ -426,23 +426,33 @@ def load_flows_zero_to_near_lvl_sensor(seq):
     timeflow= numpy.true_divide(timeflow,60.0)
     timenear= numpy.true_divide(timenear,60.0)
     data_list=numpy.array([timeflow,pressure,temp,flow,mass,masscalc])
+    data_near=numpy.array([timenear,lvlnear])
     return data_list
 
 def plot_mass_flow_and_level_der(seq):
+    print('starting')
     der=spline_levels_near(1) # this loads the 2-d array of [0,:]= time (zeroed to near sensor start and in minutes) [1,:]= derivative of spline of level near sensor (cmpm)
+    print('laoded derivative')
     flows=load_flows_zero_to_near_lvl_sensor(1)  # 5-d array with [0,:]=time (not zeroed to flow start and in minutes) [1,:]= pressure (PSI) [2,:]= temperature (Kelvin) [3,:]=volume flow (lpm) [4,:]= mass flow (? unknown units) [5,:]=mass flow calc from ideal gas law(kg per minute)
+    print('loaded flows')
+    datanear=load_levels_near(1) #[0,:]= time near from data taken (mins) [1,:]=lvl near cm reading (cm)
+    print('abotu to make figure')
     # set flows time to zeroed 
     fig=plt.figure(figsize=(10, 8), dpi=800,)
     plt.title('Magnet Thermal Test, splined near sensor level derivative')
-    ax_flow=plt.subplot(211)
+    ax_flow=plt.subplot(311)
     ax_flow.scatter(flows[0,:],flows[5,:],s=4)
     ax_flow.set_ylabel('Calculated massflow (kg per minute)')
     ax_flow.set_xlim([0,18000])
-    ax_near=plt.subplot(212)
+    ax_near=plt.subplot(312)
     ax_near.scatter(der[0,:],der[1,:],s=4)
     ax_near.set_xlim([0,18000])
     ax_near.set_ylabel('Level Near derivative(cm per min)')
-    ax_near.set_xlabel('Time (mins)')
+    ax_lvl=plt.subplot(313)
+    ax_lvl.scatter(datanear[0,:],datanear[1,:],s=4)
+    ax_lvl.set_xlim([0,18000])
+    ax_lvl.set_ylabel('Level Near (cm)')
+    ax_lvl.set_xlabel('Time (mins)')
     sum=0.0
     i=0
     while i<len(flows[0,:]):
