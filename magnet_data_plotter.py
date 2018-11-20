@@ -239,8 +239,8 @@ def spline_levels_near(seq):
 # get the data
     data_list=load_levels_near(1)
 # convert back to minutes
-    time_mins= numpy.true_divide(data_list[0,:],0.01666666666)
-    data_list=numpy.array([time_mins,data_list[1,:]])
+#    time_mins= numpy.
+#    data_list=numpy.array([time_mins,data_list[1,:]])
 # spline section
     #interpolate the data using spline of order 3 (cubic by default)
     tck, fp, ier, msg= interpolate.splrep(data_list[0,:], data_list[1,:], s=0, full_output=True)
@@ -404,7 +404,7 @@ def load_flows_zero_to_near_lvl_sensor(seq):
     pressure = data['pressure_PSI']
     temp = data['temperatureC']
     flow = data['volume_flow_LPM']
-    mass = data['mass_flow']
+#    mass = data['mass_flow']
     #calculate the mass flow from the volume flow
       #convert temp to kelvin
     kelvin=numpy.empty(len(temp))
@@ -422,13 +422,12 @@ def load_flows_zero_to_near_lvl_sensor(seq):
   # subtract each start time array (a,b,c) from the corresponding time array.
     timeflow=timeflow-a
     timenear=timenear-b
-# convert to hours after test started
+# convert to minutes after test started
     timeflow= numpy.true_divide(timeflow,60.0)
     timenear= numpy.true_divide(timenear,60.0)
     data_list=numpy.array([timeflow,pressure,temp,flow,mass,masscalc])
     data_near=numpy.array([timenear,lvlnear])
     return data_list
-
 def plot_mass_flow_and_level_der(seq):
     print('starting')
     der=spline_levels_near(1) # this loads the 2-d array of [0,:]= time (zeroed to near sensor start and in minutes) [1,:]= derivative of spline of level near sensor (cmpm)
