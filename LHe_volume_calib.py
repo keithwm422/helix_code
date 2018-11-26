@@ -198,20 +198,76 @@ def plot_spline_section(seq):
     fig.savefig('magnet_lvl_sensor_der_vs_time_section.png')
 
 def find_section_flowmeter(seq):
-    data_near= load_levels_near(1)
-    #locate the element of data_near in which the level jumps?
-    # in minutes it is after 2000 and before 4000. the jump occurs when the value is above 100.
+    flows, near, der=load_flows_near_lvl__and_der(1)
+    data_splice=find_section_of_lvl_sensor(1)
+    #locate those elements of flows that are within data_splice[0,0] and data_splice[0,-1]
     i=0
     times=[]
-    lvls=[]
-    while i< len(data_near[0,:]):
-       if data_near[0,i]>2000 and data_near[0,i] <4000 and data_near[1,i]<100:
-          times.append(data_near[0,i])
-          lvls.append(data_near[1,i])
+    flow_section=[]
+    while i< len(flows[0,:]):
+       if flows[0,i]>data_splice[0,0] and flows[0,i]<data_splice[0,-1]:
+          times.append(flows[0,i])
+          flow_section.append(flows[1,i])
        i+=1
-    data_splice=numpy.array([times,lvls])
-    return data_splice
+    flow_section_final=numpy.array([times,flow_section])
+    return flow_section_final
 
 
 def plot_flowmeter_section(seq):
-    
+    flows=find_section_flowmeter(1)
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(flows[0,:], flows[1,:], c='b', marker='s', label='mass flow section')
+    plt.title('Magnet Thermal Test, mass flow section only')
+    plt.ylabel('Mass flow (kg per min)')
+    plt.xlabel('Time (mins)')
+    fig.savefig('magnet_mass_flow_vs_time_section.png')    
+
+def plot_flow_and_spline_der_section(seq):
+    flows=find_section_flowmeter(1)
+    der_spline=spline_section(1)
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.title('Magnet Thermal Test, spline derivative and flowmeter, section only')
+    ax_flow=plt.subplot(211)
+    ax_flow.scatter(flows[0,:],flows[1,:],s=4)
+    ax_flow.set_ylabel('Calculated massflow (kg per minute)')
+#    ax_flow.set_xlim([0,18000])
+    ax_der=plt.subplot(212)
+    ax_der.scatter(der_spline[0,:],der_spline[1,:],s=4)
+    ax_der.set_ylabel('Spline derivative (cm per min)')
+    ax_der.set_xlabel('Time (mins)')
+    fig.savefig('magnet_mass_flow_and_der_vs_time_section.png')    
+
+def make_array_flow_versus_spline_der(seq):
+    flows=find_section_flowmeter(1)
+    der_spline=spline_section(1)
+    splines=[]
+    j=0
+#need to floor to integer or decimal place?
+#Try both?
+ # rounding
+    a=numpy.rint(flows[0,:])
+    flows=numpy.array([a,flows[1,:]])
+    while j<len(flows[1,:]):
+       i=0
+       while i<len(der_spline[1,:]):
+          if flows[0,j]==der_spline[0,i]: #match up the times
+             splines.append(der_spline[1,i])
+          i+=1
+       j+=1
+    b=flows[1,:]
+    print (flows[0,:])
+    print (splines)
+    section_flows_der=numpy.array([splines,b])
+    return section_flows_der
+
+def plot_flows_der(seq):
+    flow_der=make_array_flow_versus_spline_der(1)
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(flow_der[0,:], flow_der[1,:], c='b', marker='s', label='test')
+    plt.title('Magnet Thermal Test, mass flow versus spline derivative of near level sensor, section only')
+    plt.ylabel('Mass flow (kg per min)')
+    plt.xlabel('Spline derivative (cm per min)')
+    fig.savefig('magnet_mass_flow_vs_der_section.png')    
+
+
+

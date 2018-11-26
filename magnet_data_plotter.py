@@ -230,9 +230,18 @@ def load_levels_near(seq):
     a=numpy.empty(len(timenear))
     a.fill(timenear[0])
     timenear=timenear-a    
-# convert to hours after test started
+# convert to minutes after test started
     timenear= numpy.true_divide(timenear,60.0)
     data_list=numpy.array([timenear,lvlnear])
+    sum=0
+    i=0
+    while i<len(data_list[0,:]):
+        if i!=(len(data_list[0,:])-1):
+           sum+=(data_list[0,i+1]-data_list[0,i])
+           print (data_list[0,i+1]-data_list[0,i])
+        i+=1 
+    print (sum)
+    print(sum/len(data_list[0,:]))
     return data_list
 
 def spline_levels_near(seq):
@@ -281,12 +290,11 @@ def load_levels_far(seq):
     b=numpy.empty(len(timefar))
     b.fill(timefar[0])
     timefar=timefar-b    
-# convert to hours after test started
-    timefar= numpy.true_divide(timefar,3600.0)
+# convert to minutes after test started
+    timefar= numpy.true_divide(timefar,60.0)
     data_list=numpy.array([timefar,lvlfar])
     return data_list
 
-    
 def plot_levels_all(seq):
     data_listnear=load_levels_near(1);
     data_listfar=load_levels_far(1);
@@ -301,10 +309,105 @@ def plot_levels_all(seq):
     plt.legend(loc='upper left');
     plt.title('Magnet Thermal Test, near and far sensor levels')
     plt.ylabel('Level (cm)')
-    plt.xlabel('Time (hours)')
-    fig.savefig('magnet_lvls_vs_time.png')
+    plt.xlabel('Time (minutes)')
+    fig.savefig('magnet_lvls_vs_time_mins.png')
 
+def plot_far_vs_near(seq):
+    data_listnear=load_levels_near(1); # both zeroed to the same time
+    data_listfar=load_levels_far(1); # both zeroed to the same time
+    #only plot those values that are the same times
+    near_spliced=[]
+    j=0
+    while j<len(data_listfar[1,:]):
+       i=0
+       while i<len(data_listnear[1,:]):
+          if data_listnear[0,i]==data_listfar[0,j]: #match up the times
+             near_spliced.append(data_listnear[1,i])
+          i+=1
+       j+=1
+#    near_far=numpy.array([near_spliced,data_listfar[1,:]])
+    print (len(near_spliced))
+# find section also
+    k=0
+    lvlnear=[]
+    lvlfar=[]
+    while k< len(data_listfar[0,:]):
+       if data_listfar[0,k]>2000 and data_listfar[0,k] <3900:
+          lvlfar.append(data_listfar[1,k])
+          lvlnear.append(near_spliced[k])
+       k+=1
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(near_spliced, data_listfar[1,:], c='b', s=3)
+    plt.title('Magnet Thermal Test, near and far sensor levels')
+    plt.ylabel('Far (cm)')
+    plt.xlabel('Near(cm)')
+    fig.savefig('magnet_lvls_far_vs_near_all.png')
+#clear it
+    plt.clf()
+    plt.scatter(lvlnear, lvlfar, c='b', s=3)
+    plt.title('Magnet Thermal Test, near and far sensor levels, section only')
+    plt.ylabel('Far (cm)')
+    plt.xlabel('Near(cm)')
+    fig.savefig('magnet_lvls_far_vs_near_section.png')
+        
+def plot_spline_der_vs_near(seq):
+    lvlnear=load_levels_near(1)
+    # spline it and get derivative
+    tck, fp, ier, msg= interpolate.splrep(lvlnear[0,:], lvlnear[1,:], s=0, full_output=True)
+    #new array for x-axis values to evaluate the calculated spline at
+#    time_spline=numpy.arange(0, lvlnear[0,-1], 0.1)
+    time_spline=lvlnear[0,:]
+    lvl_spline=interpolate.splev(time_spline, tck, der=0)
+    lvl_der_spline=interpolate.splev(time_spline, tck, der=1)    
+    # find the spline values only for times in which we have data points
+#    der_spliced=[]
+#    j=0
+#    while j<len(lvlnear[1,:]):
+#       i=0
+#       while i<len(time_spline):
+#          if lvlnear[0,j]==time_spline[i]: #match up the times
+#             der_spliced.append(lvl_der_spline[i])
+#          i+=1
+#       j+=1
+#lvlnear is bigger by 1 than der_spliced
+    # plot the spline vs the lvl
+    # find section 
+    k=0
+    nearsection=[]
+    nearsectionder=[]
+    while k< len(lvlnear[0,:]):
+       if lvlnear[0,k]>2000 and lvlnear[0,k] <3900:
+          nearsection.append(lvlnear[1,k])
+          nearsectionder.append(lvl_der_spline[k])
+       k+=1
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(lvlnear[1,:], lvl_der_spline, c='b', s=3)
+    plt.title('Magnet Thermal Test, near derivative and near sensor level')
+    plt.ylabel('Near derivative (cm per min)')
+    plt.xlabel('Near(cm)')
+    fig.savefig('magnet_near_der_vs_near.png')
+    plt.clf()
+    plt.scatter(nearsection, nearsectionder, c='b', s=3)
+    plt.title('Magnet Thermal Test, near derivative and near sensor level, Section only')
+    plt.ylabel('Near derivative (cm per min)')
+    plt.xlabel('Near(cm)')
+    fig.savefig('magnet_near_der_vs_near_section.png')
 
+def plot_flow_vs_near(seq):
+    flows, lvlnear=load_flows_zero_to_near_lvl_sensor(1)
+    #match up times?
+    flow_spliced=[]
+    j=0
+    while j<len(lvlnear[1,:]):
+       i=0
+       while i<len(lvlnear[0,:]):
+          if lvlnear[0,j]==0: #match up the times
+             flow_spliced.append(flows[1,i])
+          i+=1
+       j+=1
+    
+
+    
 def plot_flow_and_levels(seq):
 # load lvlnear data
     datanear=numpy.genfromtxt('lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
@@ -427,7 +530,8 @@ def load_flows_zero_to_near_lvl_sensor(seq):
     timenear= numpy.true_divide(timenear,60.0)
     data_list=numpy.array([timeflow,pressure,temp,flow,mass,masscalc])
     data_near=numpy.array([timenear,lvlnear])
-    return data_list
+    return data_list, data_near
+
 def plot_mass_flow_and_level_der(seq):
     print('starting')
     der=spline_levels_near(1) # this loads the 2-d array of [0,:]= time (zeroed to near sensor start and in minutes) [1,:]= derivative of spline of level near sensor (cmpm)
