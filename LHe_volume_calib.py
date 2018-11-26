@@ -166,7 +166,6 @@ def find_section_of_lvl_sensor(seq):
     data_splice=numpy.array([times,lvls])
     return data_splice
 
-
 def plot_found_section(seq):
     section= find_section_of_lvl_sensor(1)
     fig=plt.figure(figsize=(10, 8), dpi=800)
@@ -182,11 +181,37 @@ def spline_section(seq):
     #interpolate the data using spline of order 3 (cubic by default)
     tck, fp, ier, msg= interpolate.splrep(section[0,:], section[1,:], s=0, full_output=True)
     #new array for x-axis values to evaluate the calculated spline at
-    time_spline=numpy.arange(0, section[0,-1], 0.1) #last argument can be changed for sampling time to better resolution
+    time_spline=numpy.arange(section[0,0], section[0,-1], 0.2) #last argument can be changed for sampling time to better resolution
     #get the yvalues and the derivatives from the found spline at the xvalues from the new array above. 
-#    lvl_spline=interpolate.splev(time_spline, tck, der=0)
+# lvl_spline=interpolate.splev(time_spline, tck, der=0)
     lvl_der_spline=interpolate.splev(time_spline, tck, der=1)
     data_der=numpy.array([time_spline,lvl_der_spline])
     return data_der
 
 def plot_spline_section(seq):
+    der_spline=spline_section(1)
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(der_spline[0,:], der_spline[1,:], c='b', marker='s', label='Near Sensor spline derivative')
+    plt.title('Magnet Thermal Test, near sensor section only')
+    plt.ylabel('Level derivative (cm per minute)')
+    plt.xlabel('Time (mins)')
+    fig.savefig('magnet_lvl_sensor_der_vs_time_section.png')
+
+def find_section_flowmeter(seq):
+    data_near= load_levels_near(1)
+    #locate the element of data_near in which the level jumps?
+    # in minutes it is after 2000 and before 4000. the jump occurs when the value is above 100.
+    i=0
+    times=[]
+    lvls=[]
+    while i< len(data_near[0,:]):
+       if data_near[0,i]>2000 and data_near[0,i] <4000 and data_near[1,i]<100:
+          times.append(data_near[0,i])
+          lvls.append(data_near[1,i])
+       i+=1
+    data_splice=numpy.array([times,lvls])
+    return data_splice
+
+
+def plot_flowmeter_section(seq):
+    
