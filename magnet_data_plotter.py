@@ -233,15 +233,15 @@ def load_levels_near(seq):
 # convert to minutes after test started
     timenear= numpy.true_divide(timenear,60.0)
     data_list=numpy.array([timenear,lvlnear])
-    sum=0
-    i=0
-    while i<len(data_list[0,:]):
-        if i!=(len(data_list[0,:])-1):
-           sum+=(data_list[0,i+1]-data_list[0,i])
-           print (data_list[0,i+1]-data_list[0,i])
-        i+=1 
-    print (sum)
-    print(sum/len(data_list[0,:]))
+#    sum=0
+#    i=0
+#    while i<len(data_list[0,:]):
+#        if i!=(len(data_list[0,:])-1):
+#           sum+=(data_list[0,i+1]-data_list[0,i])
+#           print (data_list[0,i+1]-data_list[0,i])
+#        i+=1 
+#    print (sum)
+#    print(sum/len(data_list[0,:]))
     return data_list
 
 def spline_levels_near(seq):
@@ -395,19 +395,27 @@ def plot_spline_der_vs_near(seq):
 
 def plot_flow_vs_near(seq):
     flows, lvlnear=load_flows_zero_to_near_lvl_sensor(1)
-    #match up times?
+    sum=0
+    m=0
+    while m<len(lvlnear[0,:]):
+       if lvlnear[0,m]<flows[0,0]:
+           sum+=1
+       m+=1
+    print (sum)
+    #match up times? x values are lvlnear[1,:] and do not change. so find the elements i of flows[3,i] 
     flow_spliced=[]
     j=0
-    while j<len(lvlnear[1,:]):
+    while j<len(lvlnear[0,:]):
        i=0
-       while i<len(lvlnear[0,:]):
-          if lvlnear[0,j]==0: #match up the times
-             flow_spliced.append(flows[1,i])
+       while i<len(flows[0,:]):
+          if lvlnear[0,j]>flows[0,i] and lvlnear[0,j]<flows[0,i+1]: #average the values nearest the right time? by the minute?
+             average=(flows[3,i]+flows[3,i+1])/2.0
+             flow_spliced.append(average)
           i+=1
        j+=1
-    
+    print(len(flow_spliced))
+    print(len(lvlnear[1,:]))
 
-    
 def plot_flow_and_levels(seq):
 # load lvlnear data
     datanear=numpy.genfromtxt('lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
@@ -507,7 +515,7 @@ def load_flows_zero_to_near_lvl_sensor(seq):
     pressure = data['pressure_PSI']
     temp = data['temperatureC']
     flow = data['volume_flow_LPM']
-#    mass = data['mass_flow']
+    mass = data['mass_flow']
     #calculate the mass flow from the volume flow
       #convert temp to kelvin
     kelvin=numpy.empty(len(temp))
