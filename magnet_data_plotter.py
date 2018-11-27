@@ -404,18 +404,80 @@ def plot_flow_vs_near(seq):
     print (sum)
     #match up times? x values are lvlnear[1,:] and do not change. so find the elements i of flows[3,i] 
     flow_spliced=[]
+    lvl_spliced=[]
     j=0
     while j<len(lvlnear[0,:]):
        i=0
        while i<len(flows[0,:]):
-          if lvlnear[0,j]>flows[0,i] and lvlnear[0,j]<flows[0,i+1]: #average the values nearest the right time? by the minute?
-             average=(flows[3,i]+flows[3,i+1])/2.0
-             flow_spliced.append(average)
+          if lvlnear[0,j]>2000 and lvlnear[0,j]<3900:
+             if lvlnear[0,j]>flows[0,i] and lvlnear[0,j]<flows[0,i+1]: #average the values nearest the right time? by the minute?
+                average=(flows[3,i]+flows[3,i+1])/2.0
+                flow_spliced.append(average) # the value nearest the time maybe?
+                lvl_spliced.append(lvlnear[1,j])
           i+=1
        j+=1
     print(len(flow_spliced))
-    print(len(lvlnear[1,:]))
+    print(len(lvl_spliced))
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(lvl_spliced, flow_spliced, c='b', s=3)
+    plt.title('Magnet Thermal Test, Flow and near sensor level')
+    plt.ylabel('Flow (liters per min)')
+    plt.xlabel('Near(cm)')
+#plt.savefig('destination_path.eps', format='eps', dpi=1000)
+    fig.savefig('magnet_flow_vs_near_section.eps')
+#    plt.clf()
+#    plt.scatter(lvl_spliced, flow_spliced, c='b', s=3)
+#    plt.title('Magnet Thermal Test, Flow and near sensor level, section only')
+#    plt.ylabel('Flow (liters per min)')
+#    plt.xlabel('Near(cm)')
+#    fig.savefig('magnet_flow_vs_near_section.png')
 
+def plot_flow_over_der_vs_near(seq):
+    # only wants array elements that are in all three of, flows, lvlnear, and der.
+    flows, lvlnear=load_flows_zero_to_near_lvl_sensor(1)
+# match up the flows to the lvlnear times
+    flow_spliced=[]
+    lvl_spliced=[]
+    lvl_spliced_time=[]
+    j=0
+    while j<len(lvlnear[0,:]):
+       i=0
+       while i<len(flows[0,:]):
+#          if lvlnear[0,j]>2000 and lvlnear[0,j]<3900:
+          if lvlnear[0,j]>flows[0,i] and lvlnear[0,j]<flows[0,i+1]: #average the values nearest the right time? by the minute?
+             average=(flows[3,i]+flows[3,i+1])/2.0
+             flow_spliced.append(average) # the value nearest the time maybe?
+             lvl_spliced.append(lvlnear[1,j])
+             lvl_spliced_time.append(lvlnear[0,j])
+          i+=1
+       j+=1
+    print(len(flow_spliced))
+    print(len(lvl_spliced))
+   # get derivative
+    tck, fp, ier, msg= interpolate.splrep(lvl_spliced_time, lvl_spliced, s=0, full_output=True)
+    #new array for x-axis values to evaluate the calculated spline at
+#    time_spline=numpy.arange(0, lvlnear[0,-1], 0.1)
+    time_spline=lvl_spliced_time
+    lvl_spline=interpolate.splev(time_spline, tck, der=0)
+    lvl_der_spline=interpolate.splev(time_spline, tck, der=1)    
+    ratio=numpy.true_divide(flow_spliced,lvl_der_spline)
+ # check some of the values?
+    p=0
+    ratio_spliced=[]
+    lvl_final=[]
+    while p<len(ratio):
+       if ratio[p]<800 and ratio[p]>-800:
+          lvl_final.append(lvl_spliced[p])
+          ratio_spliced.append(ratio[p])
+       p+=1
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(lvl_final, ratio_spliced, c='b', s=3)
+    plt.title('Magnet Thermal Test, Flow over derivative and near sensor level')
+    plt.ylabel('Flow over derivative (liters per cm)')
+    plt.xlabel('Near(cm)')
+#plt.savefig('destination_path.eps', format='eps', dpi=1000)
+    fig.savefig('magnet_flow_over_der_vs_near.eps')
+   
 def plot_flow_and_levels(seq):
 # load lvlnear data
     datanear=numpy.genfromtxt('lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
