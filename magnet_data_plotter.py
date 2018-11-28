@@ -349,6 +349,10 @@ def plot_far_vs_near(seq):
     plt.ylabel('Far (cm)')
     plt.xlabel('Near(cm)')
     fig.savefig('magnet_lvls_far_vs_near_section.png')
+# fit?
+# try linear regression
+    #do this tonight. 
+
         
 def plot_spline_der_vs_near(seq):
     lvlnear=load_levels_near(1)
@@ -665,3 +669,40 @@ def plot_mass_flow_and_level_der(seq):
 #    plt.scatter(der[0,:], der[1,:], c='r', marker='s', label='Near Sensor derivative')
     fig.savefig('magnet_mass_flow_calc_and_lvl_spline_der_vs_time.png')
     
+######################for 11/28/18
+# functions that will help find sections
+
+def plot_lvl_near_sensor_vs_time_section(seq):
+    flows, lvlnear=load_flows_zero_to_near_lvl_sensor(1)
+#    lvlnear=load_levels_near(1)
+    lvl_spliceA=[]
+    lvl_spliceB=[]
+    lvl_spliceC=[]
+    flows_spliceA=[]
+    time_spliceA=[]
+    flows_spliceB=[]
+    time_spliceB=[]
+    flows_spliceC=[]
+    time_spliceC=[]
+    k=0
+    while k<len(flows[0,:]):
+#5138
+        if flows[0,k] >5138 and flows[0,k]<6826.13 and flows[3,k]>20 and flows[3,k]<28:
+           flows_spliceA.append(flows[3,k])
+           time_spliceA.append(flows[0,k])
+        if flows[0,k]>6900 and flows[0,k]<8382.8:
+           flows_spliceB.append(flows[3,k])
+           time_spliceB.append(flows[0,k])
+        if flows[0,k]>10000 and flows[0,k]<16500:
+           flows_spliceC.append(flows[3,k])
+           time_spliceC.append(flows[0,k])
+        k+=1
+    print(time_spliceC[-1])
+    fig=plt.figure(figsize=(10, 8), dpi=800)
+    plt.scatter(time_spliceC, flows_spliceC, c='b', s=3)
+#    plt.scatter(time_spliceA, flows_spliceA, c='b', s=3)
+    plt.title('Flow vs Time, section C')
+    plt.ylabel('Flow (liters per cm)')
+    plt.xlabel('Time (mins)')
+    fig.savefig('sectionC_flow_vs_time.eps')
+
