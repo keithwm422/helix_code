@@ -437,6 +437,7 @@ def plot_flow_over_der_vs_near(seq):
     flows, lvlnear=load_flows_zero_to_near_lvl_sensor(1)
 # match up the flows to the lvlnear times
     flow_spliced=[]
+    mass_flow_spliced=[]
     lvl_spliced=[]
     lvl_spliced_time=[]
     j=0
@@ -446,7 +447,9 @@ def plot_flow_over_der_vs_near(seq):
 #          if lvlnear[0,j]>2000 and lvlnear[0,j]<3900:
           if lvlnear[0,j]>flows[0,i] and lvlnear[0,j]<flows[0,i+1]: #average the values nearest the right time? by the minute?
              average=(flows[3,i]+flows[3,i+1])/2.0
+             average_mass=(flows[5,i]+flows[5,i+1])/2.0
              flow_spliced.append(average) # the value nearest the time maybe?
+             mass_flow_spliced.append(average_mass) # the value nearest the time maybe?
              lvl_spliced.append(lvlnear[1,j])
              lvl_spliced_time.append(lvlnear[0,j])
           i+=1
@@ -461,22 +464,46 @@ def plot_flow_over_der_vs_near(seq):
     lvl_spline=interpolate.splev(time_spline, tck, der=0)
     lvl_der_spline=interpolate.splev(time_spline, tck, der=1)    
     ratio=numpy.true_divide(flow_spliced,lvl_der_spline)
+    ratio_mass=numpy.true_divide(mass_flow_spliced,lvl_der_spline) 
  # check some of the values?
     p=0
     ratio_spliced=[]
-    lvl_final=[]
+    ratio_mass_spliced=[]
+    lvl_section=[]
     while p<len(ratio):
        if ratio[p]<800 and ratio[p]>-800:
-          lvl_final.append(lvl_spliced[p])
+          lvl_section.append(lvl_spliced[p])
           ratio_spliced.append(ratio[p])
+          ratio_mass_spliced.append(ratio_mass[p])
        p+=1
     fig=plt.figure(figsize=(10, 8), dpi=800)
-    plt.scatter(lvl_final, ratio_spliced, c='b', s=3)
-    plt.title('Magnet Thermal Test, Flow over derivative and near sensor level')
+    plt.scatter(lvl_section, ratio_spliced, c='b', s=3)
+    plt.title('Magnet Thermal Test, Flow over derivative and near sensor level, section only')
     plt.ylabel('Flow over derivative (liters per cm)')
     plt.xlabel('Near(cm)')
-#plt.savefig('destination_path.eps', format='eps', dpi=1000)
+#plot the sections 
+    fig.savefig('magnet_flow_over_der_vs_near_section.eps')
+    plt.clf()
+    plt.scatter(lvl_section, ratio_mass_spliced, c='b', s=3)
+    plt.title('Magnet Thermal Test, Mass Flow over derivative and near sensor level, section only')
+    plt.ylabel('Mass Flow over derivative (g per cm)')
+    plt.xlabel('Near(cm)')
+    fig.savefig('magnet_mass_flow_over_der_vs_near_section.eps')
+# plot the entire thing
+    plt.clf()
+    plt.scatter(lvl_spliced, ratio, c='b', s=3)
+    plt.title('Magnet Thermal Test, Mass Flow over derivative and near sensor level')
+    plt.ylabel('Mass Flow over derivative (g per cm)')
+    plt.xlabel('Near(cm)')
     fig.savefig('magnet_flow_over_der_vs_near.eps')
+    # mass
+    plt.clf()
+    plt.scatter(lvl_spliced, ratio_mass, c='b', s=3)
+    plt.title('Magnet Thermal Test, Mass Flow over derivative and near sensor level')
+    plt.ylabel('Mass Flow over derivative (g per cm)')
+    plt.xlabel('Near(cm)')
+    fig.savefig('magnet_mass_flow_over_der_vs_near.eps')
+
    
 def plot_flow_and_levels(seq):
 # load lvlnear data
@@ -583,7 +610,7 @@ def load_flows_zero_to_near_lvl_sensor(seq):
     kelvin=numpy.empty(len(temp))
     kelvin.fill(273.15)
     temp=temp+kelvin
-    masscalc = 4.0/(1000.0*1.20675)*numpy.true_divide(pressure,temp) #molar mass * 1000 * Pressure/(R[PSIliters/(kelvinmol)]*Temp)
+    masscalc = 4.0/(1.20675)*numpy.true_divide(pressure,temp) #molar mass * Pressure/(R[PSIliters/(kelvinmol)]*Temp) has units of grams
     masscalc=numpy.multiply(masscalc,flow)
 # convert unix time to seconds after tests started for all arrays of time, each array of time has different lengths since data was poorly recorded.
    # make array of same length as each time array
