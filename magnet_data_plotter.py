@@ -713,10 +713,22 @@ def plot_lvl_near_sensor_vs_time_section(seq):
 #need subplots, subplots(sharex=True)
     ax_flow=plt.subplot(211)
     ax_flow.scatter(flows[0,:],flows[3,:],s=3)
+# add in the section lines
+    xposition=[5138,6826.13,6900,8382.8,10000,16500]
+    labels=['section A', 'section B', 'section C']
+    label_pos=[5300,7000,12000]
+    i=0
+    for xc in xposition:
+      ax_flow.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
+    for xl in labels:
+      ax_flow.text(label_pos[i], 40, labels[i], rotation=0, fontsize=8)
+      i+=1
     ax_flow.set_ylabel('Flow (liters per minute)')
     ax_flow.set_xlim([0,18000])
     ax_near=plt.subplot(212,sharex=ax_flow)
     ax_near.scatter(lvlnear[0,:],lvlnear[1,:],s=3)
+    for xi in xposition:
+      ax_near.axvline(x=xi, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
     ax_near.set_ylabel('Level Sensor (cm)')
     ax_near.set_xlim([0,18000])
     ax_near.set_xlabel('Time (mins)')
