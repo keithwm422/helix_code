@@ -676,8 +676,11 @@ def plot_lvl_near_sensor_vs_time_section(seq):
     flows, lvlnear=load_flows_zero_to_near_lvl_sensor(1)
 #    lvlnear=load_levels_near(1)
     lvl_spliceA=[]
+    lvl_time_spliceA=[]
     lvl_spliceB=[]
+    lvl_time_spliceB=[]
     lvl_spliceC=[]
+    lvl_time_spliceC=[]
     flows_spliceA=[]
     time_spliceA=[]
     flows_spliceB=[]
@@ -686,10 +689,10 @@ def plot_lvl_near_sensor_vs_time_section(seq):
     time_spliceC=[]
     k=0
     while k<len(flows[0,:]):
-#5138
         if flows[0,k] >5138 and flows[0,k]<6826.13 and flows[3,k]>20 and flows[3,k]<28:
            flows_spliceA.append(flows[3,k])
            time_spliceA.append(flows[0,k])
+           #how to splice simultaneously the lvl sensor? its a smaller array so just go through the elements?
         if flows[0,k]>6900 and flows[0,k]<8382.8:
            flows_spliceB.append(flows[3,k])
            time_spliceB.append(flows[0,k])
@@ -697,12 +700,52 @@ def plot_lvl_near_sensor_vs_time_section(seq):
            flows_spliceC.append(flows[3,k])
            time_spliceC.append(flows[0,k])
         k+=1
-    print(time_spliceC[-1])
+#do the lvlsensors after?
+    j=0
+    while j<len(lvlnear[0,:]):
+        if lvlnear[0,j] >time_spliceA[0] and lvlnear[0,j]<time_spliceA[-1]:
+           lvl_spliceA.append(lvlnear[1,j])
+           lvl_time_spliceA.append(lvlnear[0,j])
+        j+=1
+#    print(time_spliceC[-1])
     fig=plt.figure(figsize=(10, 8), dpi=800)
+#plot all 
+#need subplots, subplots(sharex=True)
+    ax_flow=plt.subplot(211)
+    ax_flow.scatter(flows[0,:],flows[3,:],s=3)
+    ax_flow.set_ylabel('Flow (liters per minute)')
+    ax_flow.set_xlim([0,18000])
+    ax_near=plt.subplot(212,sharex=ax_flow)
+    ax_near.scatter(lvlnear[0,:],lvlnear[1,:],s=3)
+    ax_near.set_ylabel('Level Sensor (cm)')
+    ax_near.set_xlim([0,18000])
+    ax_near.set_xlabel('Time (mins)')
+    fig.savefig('ALL_flow_and_lvl_vs_time.eps')
+    plt.clf()
+#plot sectionA
+    plt.scatter(time_spliceA, flows_spliceA, c='b', s=3)
+    plt.title('Flow vs Time, section A')
+    plt.ylabel('Flow (liters per cm)')
+    plt.xlabel('Time (mins)')
+    fig.savefig('sectionA_flow_vs_time.eps')
+    plt.clf()
+    plt.scatter(lvl_time_spliceA, lvl_spliceA, c='b', s=3)
+    plt.title('Level vs Time, section A')
+    plt.ylabel('Level (cm)')
+    plt.xlabel('Time (mins)')
+    fig.savefig('sectionA_lvl_vs_time.eps')
+    plt.clf()
+
+#plot sectionB
+    plt.scatter(time_spliceB, flows_spliceB, c='b', s=3)
+    plt.title('Flow vs Time, section B')
+    plt.ylabel('Flow (liters per cm)')
+    plt.xlabel('Time (mins)')
+    fig.savefig('sectionB_flow_vs_time.eps')
+    plt.clf()
+#plot sectionC
     plt.scatter(time_spliceC, flows_spliceC, c='b', s=3)
-#    plt.scatter(time_spliceA, flows_spliceA, c='b', s=3)
     plt.title('Flow vs Time, section C')
     plt.ylabel('Flow (liters per cm)')
     plt.xlabel('Time (mins)')
     fig.savefig('sectionC_flow_vs_time.eps')
-
