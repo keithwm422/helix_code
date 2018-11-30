@@ -723,99 +723,225 @@ def plot_lvl_near_sensor_vs_time_section(seq):
     splineA=interpolate.splev(lvl_time_spliceA, tckA, der=0)
     splineA_more=interpolate.splev(splineA_times_more, tckA, der=0)
     splineA_der=interpolate.splev(lvl_time_spliceA, tckA, der=1)# derivative only at lvl times
+    splineA_der_more=interpolate.splev(splineA_times_more, tckA, der=1)# derivative at spline times
+    splineA_der_flowtimes=interpolate.splev(time_spliceA, tckA, der=1)# derivative at flow
     #sectionB spline
     tckB, fpB, ierB, msgB= interpolate.splrep(lvl_time_spliceB, lvl_spliceB, s=0, full_output=True)
     splineB_times_more=numpy.arange(lvl_time_spliceB[0],lvl_time_spliceB[-1],0.1)
     splineB=interpolate.splev(lvl_time_spliceB, tckB, der=0)
     splineB_more=interpolate.splev(splineB_times_more, tckB, der=0)
     splineB_der=interpolate.splev(lvl_time_spliceB, tckB, der=1)# derivative only at lvl times
+    splineB_der_more=interpolate.splev(splineB_times_more, tckB, der=1)# derivative only at lvl times
+    splineB_der_flowtimes=interpolate.splev(time_spliceB, tckB, der=1)# derivative at flow
     #sectionC spline
     tckC, fpC, ierC, msgC= interpolate.splrep(lvl_time_spliceC, lvl_spliceC, s=0, full_output=True)
     splineC_times_more=numpy.arange(lvl_time_spliceC[0],lvl_time_spliceC[-1],0.1)
     splineC=interpolate.splev(lvl_time_spliceC, tckC, der=0)
     splineC_more=interpolate.splev(splineC_times_more, tckC, der=0)
     splineC_der=interpolate.splev(lvl_time_spliceC, tckC, der=1) # derivative only at lvl times
+    splineC_der_more=interpolate.splev(splineC_times_more, tckC, der=1)# derivative only at lvl times
+    splineC_der_flowtimes=interpolate.splev(time_spliceC, tckC, der=1)# derivative at flow
 ###############plotter section############
 ###plot all### 
     fig=plt.figure(figsize=(10, 8), dpi=800)
-    #need subplots, subplots(sharex=True)
-    ax_flow=plt.subplot(211)
-    ax_flow.scatter(flows[0,:],flows[3,:],s=3)
-    # add in the section lines
-    xposition=[5138,6826.13,6900,8382.8,10000,16500]
-    labels=['section A', 'section B', 'section C']
-    label_pos=[5300,7000,12000]
-    i=0
-    for xc in xposition:
-      ax_flow.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
-    for xl in labels:
-      ax_flow.text(label_pos[i], 40, labels[i], rotation=0, fontsize=8)
-      i+=1
-    ax_flow.set_ylabel('Flow (liters per minute)')
-    ax_flow.set_xlim([0,18000])
-    ax_near=plt.subplot(212,sharex=ax_flow)
-    ax_near.scatter(lvlnear[0,:],lvlnear[1,:],s=3)
-    for xi in xposition:
-      ax_near.axvline(x=xi, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
-    ax_near.set_ylabel('Level Sensor (cm)')
-    ax_near.set_xlim([0,18000])
-    ax_near.set_xlabel('Time (mins)')
-    fig.savefig('ALL_flow_and_lvl_vs_time.eps')
-    plt.clf()
+    if seq==1:
+       fig.subplots_adjust(hspace=0)
+       #need subplots, subplots(sharex=True)
+       ax_flow=plt.subplot(211)
+       plt.setp(ax_flow.get_xticklabels(), visible=False)
+       ax_flow.scatter(flows[0,:],flows[3,:],s=3)
+       # add in the section lines
+       xposition=[5138,6826.13,6900,8382.8,10000,16500]
+       labels=['section A', 'section B', 'section C']
+       label_pos=[5300,7000,12000]
+       i=0
+       for xc in xposition:
+          ax_flow.axvline(x=xc, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
+       for xl in labels:
+          ax_flow.text(label_pos[i], 40, labels[i], rotation=0, fontsize=8)
+          i+=1
+       ax_flow.set_ylabel('Flow (liters per minute)')
+       ax_flow.set_xlim([0,18000])
+       ax_near=plt.subplot(212,sharex=ax_flow)
+       ax_near.scatter(lvlnear[0,:],lvlnear[1,:],s=3)
+       for xi in xposition:
+          ax_near.axvline(x=xi, color='k', linestyle='--') # this is for the lines to mark at what time notable things in the test occured.
+       ax_near.set_ylabel('Level Sensor (cm)')
+       ax_near.set_xlim([0,18000])
+       ax_near.set_xlabel('Time (mins)')
+       fig.savefig('ALL_flow_and_lvl_vs_time.eps')
+       plt.clf()
+#################################################SECTIONS#############################################################
 ###plot sectionA###
     # plot flow
-    plt.scatter(time_spliceA, flows_spliceA, c='b', s=3)
-    plt.title('Flow vs Time, section A')
-    plt.ylabel('Flow (liters per cm)')
-    plt.xlabel('Time (mins)')
-    fig.savefig('sectionA_flow_vs_time.eps')
-    plt.clf()
-    # plot level data and spline
-#    plt.scatter(lvl_time_spliceA, splineA, c='r', s=4, marker='s', label='Spline')
-    plt.scatter(splineA_times_more, splineA_more, c='r', s=4, marker='s', label='Spline')
-    plt.scatter(lvl_time_spliceA, lvl_spliceA, c='b', s=3, label='Data')
-    plt.legend(loc='upper right')
-    plt.title('Level vs Time, section A')
-    plt.ylabel('Level (cm)')
-    plt.xlabel('Time (mins)')
-    fig.savefig('sectionA_lvl_and_spline_vs_time.eps')
-#    fig.savefig('sectionA_lvl_vs_time.eps')
-    plt.clf()
-    #plot flow and level with subplots?
-#https://matplotlib.org/devdocs/gallery/subplots_axes_and_figures/shared_axis_demo.html#sphx-glr-gallery-subplots-axes-and-figures-shared-axis-demo-py
-
+    if seq==2:
+       plt.scatter(time_spliceA, flows_spliceA, c='b', s=3)
+       plt.title('Flow vs Time, section A')
+       plt.ylabel('Flow (liters per min)')
+       plt.xlabel('Time (mins)')
+       fig.savefig('sectionA_flow_vs_time.eps')
+       plt.clf()
+       # plot level data and spline
+   #    plt.scatter(lvl_time_spliceA, splineA, c='r', s=4, marker='s', label='Spline')
+       plt.scatter(splineA_times_more, splineA_more, c='r', s=4, marker='s', label='Spline')
+       plt.scatter(lvl_time_spliceA, lvl_spliceA, c='b', s=3, label='Data')
+       plt.legend(loc='upper right')
+       plt.title('Level vs Time, section A')
+       plt.ylabel('Level (cm)')
+       plt.xlabel('Time (mins)')
+       fig.savefig('sectionA_lvl_and_spline_vs_time.eps')
+   #    fig.savefig('sectionA_lvl_vs_time.eps')
+       plt.clf()
+      #plot flow and level with subplots?
+   #https://matplotlib.org/devdocs/gallery/subplots_axes_and_figures/shared_axis_demo.html#sphx-glr-gallery-subplots-axes-and-figures-shared-axis-demo-py
+   #    ax_spline=plt.subplot(211,sharex
+    if seq==1:
+# make subplots instead 
+       fig.subplots_adjust(hspace=0)
+       ax_Aflow=plt.subplot(211)
+       ax_Aflow.set_title('Section A')
+       plt.setp(ax_Aflow.get_xticklabels(), visible=False)              
+       ax_Aflow.scatter(time_spliceA, flows_spliceA, c='b', s=3)
+       ax_Aflow.set_ylabel('Flow (liters per min)')
+       ax_Aspline=plt.subplot(212)
+       ax_Aspline.scatter(splineA_times_more, splineA_der_more, c='r', s=4, marker='s', label='Spline')
+       ax_Aspline.scatter(lvl_time_spliceA, splineA_der, c='b', s=4, marker='s', label='Spline at data points')
+#       ax_Aspline.scatter(lvl_time_spliceA, lvl_spliceA, c='b', s=3, label='Data')
+       ax_Aspline.legend(loc='upper right')
+       ax_Aspline.set_ylabel('Level derivative (cm per min)')
+       ax_Aspline.set_xlabel('Time (mins)')
+       fig.savefig('sectionA_lvl_der_spline_vs_time_subplots_both.eps')
+#       fig.savefig('sectionA_lvl_der_spline_vs_time_subplots_more.eps')
+       plt.clf()
+    if seq==3:
+    #plot flows and derivative at all flow points
+       fig.subplots_adjust(hspace=0)
+       ax_Aflow=plt.subplot(211)
+       ax_Aflow.set_title('Section A')
+       plt.setp(ax_Aflow.get_xticklabels(), visible=False)              
+       ax_Aflow.scatter(time_spliceA, flows_spliceA, c='b', s=3)
+       ax_Aflow.set_ylabel('Flow (liters per min)')
+       ax_Aspline=plt.subplot(212)
+       ax_Aspline.scatter(time_spliceA, splineA_der_flowtimes, c='r', s=4, marker='s', label='Spline')
+#       ax_Aspline.scatter(lvl_time_spliceA, splineA_der, c='r', s=4, marker='s', label='Spline')
+#       ax_Aspline.scatter(lvl_time_spliceA, lvl_spliceA, c='b', s=3, label='Data')
+ #      ax_Aspline.legend(loc='upper right')
+       ax_Aspline.set_ylabel('Level derivative (cm per min)')
+       ax_Aspline.set_xlabel('Time (mins)')
+       fig.savefig('sectionA_lvl_der_spline_vs_time_subplots_flowtimes.eps')
+       plt.clf()
+#    if seq==4:
+       #make plot of ratios, which involves calculating the flows at the lvltimes?
 
 ###plot sectionB###
-    plt.scatter(time_spliceB, flows_spliceB, c='b', s=3)
-    plt.title('Flow vs Time, section B')
-    plt.ylabel('Flow (liters per cm)')
-    plt.xlabel('Time (mins)')
-    fig.savefig('sectionB_flow_vs_time.eps')
-    plt.clf()
+    if seq==2:
+       plt.scatter(time_spliceB, flows_spliceB, c='b', s=3)
+       plt.title('Flow vs Time, section B')
+       plt.ylabel('Flow (liters per min)')
+       plt.xlabel('Time (mins)')
+       fig.savefig('sectionB_flow_vs_time.eps')
+       plt.clf()
 #    plt.scatter(lvl_time_spliceB, lvl_spliceB, c='b', s=3)
-    plt.scatter(splineB_times_more, splineB_more, c='r', s=4, marker='s', label='Spline')
-    plt.scatter(lvl_time_spliceB, lvl_spliceB, c='b', s=3, label='Data')
-    plt.legend(loc='upper right')
-    plt.title('Level vs Time, section B')
-    plt.ylabel('Level (cm)')
-    plt.xlabel('Time (mins)')
-    fig.savefig('sectionB_lvl_and_spline_vs_time.eps')
+       plt.scatter(splineB_times_more, splineB_more, c='r', s=4, marker='s', label='Spline')
+       plt.scatter(lvl_time_spliceB, lvl_spliceB, c='b', s=3, label='Data')
+       plt.legend(loc='upper right')
+       plt.title('Level vs Time, section B')
+       plt.ylabel('Level (cm)')
+       plt.xlabel('Time (mins)')
+#       fig.savefig('sectionB_lvl_and_spline_vs_time.eps')
 #    fig.savefig('sectionB_lvl_vs_time.eps')
-    plt.clf()
-###plot sectionC###
-    plt.scatter(time_spliceC, flows_spliceC, c='b', s=3)
-    plt.title('Flow vs Time, section C')
-    plt.ylabel('Flow (liters per cm)')
-    plt.xlabel('Time (mins)')
-    fig.savefig('sectionC_flow_vs_time.eps')
-    plt.clf()
-#    plt.scatter(lvl_time_spliceC, lvl_spliceC, c='b', s=3)
-    plt.scatter(splineC_times_more, splineC_more, c='r', s=4, marker='s', label='Spline')
-    plt.scatter(lvl_time_spliceC, lvl_spliceC, c='b', s=3, label='Data')
-    plt.legend(loc='upper right')
-    plt.title('Level vs Time, section C')
-    plt.ylabel('Level (cm)')
-    plt.xlabel('Time (mins)')
-    fig.savefig('sectionC_lvl_and_spline_vs_time.eps')
-#    fig.savefig('sectionC_lvl_vs_time.eps')
+       plt.clf()
+    if seq==1:
+# make subplots instead 
+       fig.subplots_adjust(hspace=0)
+       ax_Bflow=plt.subplot(211)
+       ax_Bflow.set_title('Section B')
+       plt.setp(ax_Bflow.get_xticklabels(), visible=False)              
+       ax_Bflow.scatter(time_spliceB, flows_spliceB, c='b', s=3)
+       ax_Bflow.set_ylabel('Flow (liters per min)')
+       ax_Bspline=plt.subplot(212)
+       ax_Bspline.scatter(splineB_times_more, splineB_der_more, c='r', s=4, marker='s', label='Spline')
+       ax_Bspline.scatter(lvl_time_spliceB, splineB_der, c='b', s=4, marker='s', label='Spline at data points')
+#       ax_Bspline.scatter(lvl_time_spliceB, lvl_spliceB, c='b', s=3, label='Data')
+       ax_Bspline.legend(loc='upper right')
+       ax_Bspline.set_ylabel('Level derivative (cm per min)')
+       ax_Bspline.set_xlabel('Time (mins)')
+       fig.savefig('sectionB_lvl_der_spline_vs_time_subplots_both.eps')
+#       fig.savefig('sectionB_lvl_der_spline_vs_time_subplots_more.eps')
+       plt.clf()
+    if seq==3:
+# make subplots instead 
+       fig.subplots_adjust(hspace=0)
+       ax_Bflow=plt.subplot(211)
+       ax_Bflow.set_title('Section B')
+       plt.setp(ax_Bflow.get_xticklabels(), visible=False)              
+       ax_Bflow.scatter(time_spliceB, flows_spliceB, c='b', s=3)
+       ax_Bflow.set_ylabel('Flow (liters per min)')
+       ax_Bspline=plt.subplot(212)
+       ax_Bspline.scatter(time_spliceB, splineB_der_flowtimes, c='r', s=4, marker='s', label='Spline')
+#       ax_Bspline.scatter(lvl_time_spliceB, splineB_der, c='r', s=4, marker='s', label='Spline')
+#       ax_Bspline.scatter(lvl_time_spliceB, lvl_spliceB, c='b', s=3, label='Data')
+#       ax_Bspline.legend(loc='upper right')
+       ax_Bspline.set_ylabel('Level derivative (cm per min)')
+       ax_Bspline.set_xlabel('Time (mins)')
+       fig.savefig('sectionB_lvl_der_spline_vs_time_subplots_flowtimes.eps')
+       plt.clf()
 
+###plot sectionC###
+    if seq==2:
+       plt.scatter(time_spliceC, flows_spliceC, c='b', s=3)
+       plt.title('Flow vs Time, section C')
+       plt.ylabel('Flow (liters per min)')
+       plt.xlabel('Time (mins)')
+       fig.savefig('sectionC_flow_vs_time.eps')
+       plt.clf()
+#       plt.scatter(lvl_time_spliceC, lvl_spliceC, c='b', s=3)
+       plt.scatter(splineC_times_more, splineC_more, c='r', s=4, marker='s', label='Spline')
+       plt.scatter(lvl_time_spliceC, lvl_spliceC, c='b', s=3, label='Data')
+       plt.legend(loc='upper right')
+       plt.title('Level vs Time, section C')
+       plt.ylabel('Level (cm)')
+       plt.xlabel('Time (mins)')
+       fig.savefig('sectionC_lvl_and_spline_vs_time.eps')
+#       fig.savefig('sectionC_lvl_vs_time.eps')
+    if seq==1:
+# make subplots instead 
+       fig.subplots_adjust(hspace=0)
+       ax_Cflow=plt.subplot(211)
+       ax_Cflow.set_title('Section C')
+       plt.setp(ax_Cflow.get_xticklabels(), visible=False)              
+       ax_Cflow.scatter(time_spliceC, flows_spliceC, c='b', s=3)
+       ax_Cflow.set_ylabel('Flow (liters per min)')
+       ax_Cspline=plt.subplot(212)
+       ax_Cspline.scatter(splineC_times_more, splineC_der_more, c='r', s=4, marker='s', label='Spline')
+       ax_Cspline.scatter(lvl_time_spliceC, splineC_der, c='b', s=4, marker='s', label='Spline at data points')
+#       ax_Cspline.scatter(lvl_time_spliceC, lvl_spliceC, c='b', s=3, label='Data')
+       ax_Cspline.legend(loc='upper right')
+       ax_Cspline.set_ylabel('Level derivative (cm per min)')
+       ax_Cspline.set_xlabel('Time (mins)')
+       fig.savefig('sectionC_lvl_der_spline_vs_time_subplots_both.eps')
+#       fig.savefig('sectionC_lvl_der_spline_vs_time_subplots_more.eps')
+#       fig.savefig('sectionC_lvl_der_spline_vs_time_subplots.eps')
+#       plt.clf()
+    if seq==3:
+# make subplots instead 
+       fig.subplots_adjust(hspace=0)
+       ax_Cflow=plt.subplot(211)
+       ax_Cflow.set_title('Section C')
+       plt.setp(ax_Cflow.get_xticklabels(), visible=False)              
+       ax_Cflow.scatter(time_spliceC, flows_spliceC, c='b', s=3)
+       ax_Cflow.set_ylabel('Flow (liters per min)')
+       ax_Cspline=plt.subplot(212)
+       ax_Cspline.scatter(time_spliceC, splineC_der_flowtimes, c='r', s=4, marker='s', label='Spline')
+#       ax_Cspline.scatter(lvl_time_spliceC, splineC_der_more, c='r', s=4, marker='s', label='Spline')
+#       ax_Cspline.scatter(lvl_time_spliceC, lvl_spliceC, c='b', s=3, label='Data')
+#       ax_Cspline.legend(loc='upper right')
+       ax_Cspline.set_ylabel('Level derivative (cm per min)')
+       ax_Cspline.set_xlabel('Time (mins)')
+       fig.savefig('sectionC_lvl_der_spline_vs_time_subplots_flowtimes.eps')
+###################PLOT RATIOS######################
+# think about moving averages like this 
+#def moving_average(a, n=3) :
+#    ret = np.cumsum(a, dtype=float)
+#    ret[n:] = ret[n:] - ret[:-n]
+#    return ret[n - 1:] / n
