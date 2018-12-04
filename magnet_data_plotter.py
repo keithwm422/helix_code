@@ -945,3 +945,8 @@ def plot_lvl_near_sensor_vs_time_section(seq):
 #    ret = np.cumsum(a, dtype=float)
 #    ret[n:] = ret[n:] - ret[:-n]
 #    return ret[n - 1:] / n
+
+##### calculate ratio in more than one scenario####
+##moving average
+
+
