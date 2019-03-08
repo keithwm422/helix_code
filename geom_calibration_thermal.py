@@ -155,23 +155,29 @@ def find_avg_errors(lvlA,lvlB,lvlC,ratA,ratB,ratC,num_bins):
     binwidth=(lvlmax-lvlmin)/num_bins
     print("{} is the binwidth in cm".format(binwidth))
     #outer loop for something about which bin
-    lvliter=lvlmin-binwidth
+    lvliter=lvlmin-(binwidth/2.0)
     #array for storing the data points in the bin
     lvlbin_data=[]
     ratbin_data=[]
-    while lvliter<lvlmax+binwidth:
+    while lvliter<lvlmax+(binwidth/2.0):
        #inner loop for checking all the elements
        l=0
        while l<len(lvltots):
-          if lvltots[l]>lvliter-binwidth and lvltots[l]<lvliter+binwidth:
+          if lvltots[l]>=lvliter and lvltots[l]<=lvliter+(binwidth):
              lvlbin_data.append(lvltots[l]) # put that value in the array to be used for calculations
              ratbin_data.append(rattots[l])
              #find mean, reset values, declare values needed zero before this loop, and then calc standard deviation for those values somehow also
           l+=1
        print(len(ratbin_data))
-       avg.append(numpy.mean(ratbin_data))
-       errors.append(numpy.std(ratbin_data))
-       bins.append(lvliter)
+#       if len(ratbin_data)==0:
+#          ratbin_data.append(0)
+#       avg.append(numpy.mean(ratbin_data))
+#       errors.append(numpy.std(ratbin_data))
+#       bins.append(lvliter)
+       if len(ratbin_data)!=0:
+          avg.append(numpy.mean(ratbin_data))
+          errors.append(numpy.std(ratbin_data))
+          bins.append(lvliter)
        lvliter+=binwidth
        lvlbin_data=[] # clear the bin data array
        ratbin_data=[]
@@ -700,6 +706,27 @@ def plot_lvl_near_sensor_vs_time_section(seq):
        bins10, avg10, errors10=find_avg_errors(lvlA_refined,lvlB_refined,lvlC_refined,ratioA_refined,ratioB_refined,ratioC_refined,10)
        bins20, avg20, errors20=find_avg_errors(lvlA_refined,lvlB_refined,lvlC_refined,ratioA_refined,ratioB_refined,ratioC_refined,20)
        bins40, avg40, errors40=find_avg_errors(lvlA_refined,lvlB_refined,lvlC_refined,ratioA_refined,ratioB_refined,ratioC_refined,40)
+# fitting section
+#       print("{} is array bins".format(bins40))
+#       print("{} is array avg".format(avg40))
+       p40, res40, rank40, single40,rcond40=numpy.polyfit(bins40, avg40, 0, full=True)
+#       pxvals40=numpy.linspace(bins40[0],bins40[-1],100)
+       pvals40=numpy.poly1d(p40)
+#20
+       p20, res20, rank20, single20,rcond20=numpy.polyfit(bins20, avg20, 0, full=True)
+#       pxvals20=numpy.linspace(bins20[0],bins20[-1],100)
+       pvals20=numpy.poly1d(p20)
+#10
+       p10, res10, rank10, single10,rcond10=numpy.polyfit(bins10, avg10, 0, full=True)
+#       pxvals10=numpy.linspace(bins10[0],bins10[-1],100)
+       pvals10=numpy.poly1d(p10)
+#5
+       p5, res5, rank5, single5,rcond5=numpy.polyfit(bins5, avg5, 0, full=True)
+#       pxvals5=numpy.linspace(bins5[0],bins5[-1],100)
+       pvals5=numpy.poly1d(p5)
+#old line for plotting evaluated points
+#       ax_40.scatter(pxvals40, pvals40(pxvals40), linestyle='--', color='black',label='fit')
+
 #put here my x array of lvl values       x = np.array([1, 2, 3, 4, 5])
 # put here the mean in that bin of the ratio       y = np.power(x, 2) # Effectively y = x**2
 # put here the standard deviations for each bin       e = np.array([1.5, 2.6, 3.7, 4.6, 5.5])
@@ -713,20 +740,24 @@ def plot_lvl_near_sensor_vs_time_section(seq):
        plt.setp(ax_40.get_xticklabels(), visible=False)
        ax_40.set_title('Ratio vs Level, Binned')
        ax_40.errorbar(bins40, avg40, errors40, linestyle='None', marker='^', capsize=3, color='r',label=plot_name40)
+       ax_40.axhline(pvals40(50), color='black', lw=1)
        ax_40.legend(loc='upper right')
        ax_20=plt.subplot(412,sharex=ax_40, sharey=ax_40)
        plt.setp(ax_20.get_xticklabels(), visible=False)
        ax_20.errorbar(bins20, avg20, errors20, linestyle='None', marker='^', capsize=3, color='b',label=plot_name20)
+       ax_20.axhline(pvals20(50), color='black', lw=1)
 #       ax_40.set_ylabel('Ratio (meters squared)')
        ax_20.legend(loc='upper right')
        ax_10=plt.subplot(413,sharex=ax_40,sharey=ax_40)
        plt.setp(ax_10.get_xticklabels(), visible=False)
        ax_10.errorbar(bins10, avg10, errors10, linestyle='None', marker='^', capsize=3, color='g',label=plot_name10)
+       ax_10.axhline(pvals10(50), color='black', lw=1)
        ax_10.set_ylabel('Ratio (meters squared)')
        ax_10.legend(loc='upper right')
        ax_5=plt.subplot(414,sharex=ax_40,sharey=ax_40)
 #       plt.setp(ax_5.get_xticklabels(), visible=False)
        ax_5.errorbar(bins5, avg5, errors5, linestyle='None', marker='^', capsize=3, color='orange',label=plot_name5)
+       ax_5.axhline(pvals5(50), color='black', lw=1)
        ax_5.set_xlabel('Level (cm)')
        ax_5.legend(loc='upper right')
 #       plt.errorbar(bins20, avg20, errors20, linestyle='None', marker='^', capsize=3, color='b', label=plot_name20)
@@ -739,3 +770,26 @@ def plot_lvl_near_sensor_vs_time_section(seq):
 #       plt.xlabel('Level (cm)')
        filename="Ratio_vs_levels_binwidth_subplots.png"
        fig.savefig(filename)
+       plt.clf()
+       cryo_data=numpy.genfromtxt('vol_vs_lvl_cryo.csv', dtype=float, delimiter=',', names=True)
+       lvl_cryo = cryo_data['lvl']
+       vol_cryo = cryo_data['vol']
+#       plt.scatter(lvl_cryo,vol_cryo,s=3, c='black')
+       x=numpy.arange(lvl_cryo[2],100,0.01)
+       #convert fits to liters (multiply by 10000 for cm^2 then divide by 1000 for the conversion to liters) and add in the value of cryo at around 30cm (since data stops there?)
+       fit40=(pvals40(50)*10.0)*x+(vol_cryo[2]-(pvals40(50)*10.0*x[0]))
+       fit20=(pvals20(50)*10.0)*x+(vol_cryo[2]-(pvals20(50)*10.0*x[0]))
+       fit10=(pvals10(50)*10.0)*x+(vol_cryo[2]-(pvals10(50)*10.0*x[0]))
+       fit5=(pvals5(50)*10.0)*x+(vol_cryo[2]-(pvals5(50)*10.0*x[0]))
+       plt.plot(x,fit40,x,fit20,x,fit10,x,fit5,lvl_cryo,vol_cryo,'o')
+       plt.legend(('Fit 40','Fit 20','Fit 10','Fit 5','Data'),loc='upper left')
+       plt.title('Volume at corresponding sensor level from Cryogenics Documentation')
+       plt.ylabel('Volume (liters)')
+       plt.xlabel('Sensor Level (cm)')
+       filename="Volume_vs_levels_cryo_doc.png"
+       fig.savefig(filename)
+       ### take the constants from fits and that is the slope of the Vol vs level plot. 
+####################### ~0.35meters *(level cm) ####################################### 1meter=1000liters
+#       plt.clf()
+
+
