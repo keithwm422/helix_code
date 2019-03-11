@@ -1,10 +1,11 @@
 #This code loads and fits the far level sensor and the near level sensor and computes residuals for the fits
 import matplotlib.pyplot as plt
 import numpy
+import paths
 from scipy import interpolate
 
 def load_levels_near(seq):
-    datanear=numpy.genfromtxt('lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
+    datanear=numpy.genfromtxt(paths.data_path+'/lvlSensorNear.csv', dtype=float, delimiter=',', names=True)
     timenear = datanear['time']
     lvlnear=datanear['StackSideLevelcm']
 # convert unix time to seconds after tests started
@@ -26,7 +27,7 @@ def load_levels_near(seq):
     return data_list
 
 def load_levels_far(seq):
-    datafar=numpy.genfromtxt('lvlSensorFar.csv', dtype=float, delimiter=',', names=True)
+    datafar=numpy.genfromtxt(paths.data_path+'/lvlSensorFar.csv', dtype=float, delimiter=',', names=True)
     timefar=datafar['time']
     lvlfar=datafar['NonStackSideLevelcm']
 # convert unix time to seconds after tests started
@@ -62,32 +63,39 @@ def plot_far_vs_near(seq):
           lvlfar.append(data_listfar[1,k])
           lvlnear.append(near_spliced[k])
        k+=1
+    p, res, rank, single,rcond=numpy.polyfit(lvlnear, lvlfar, 3, full=True)
+    print (res)
+    pxvals=numpy.linspace(20,100,100)
+    pvals=numpy.poly1d(p)
     fig=plt.figure(figsize=(10, 8), dpi=800)
-    plt.scatter(near_spliced, data_listfar[1,:], c='b', s=3)
-    plt.title('Magnet Thermal Test, near and far sensor levels')
-    plt.ylabel('Far (cm)')
+    plt.scatter(near_spliced, data_listfar[1,:],s=100, c='b', marker='s', label='All measurements')
+    plt.scatter(lvlnear, lvlfar,s=64, c='r', marker='o',label='[20, 100] cm for Far sensor')
+    plt.plot(pxvals, pvals(pxvals),c='k',label='Fit in linear region')
+    plt.legend(loc='upper left')
+    plt.title('Near and Far sensor readings')
+    plt.ylabel('Far(cm)')
     plt.xlabel('Near(cm)')
-    fig.savefig('lvls_far_vs_near_all.png')
+    fig.savefig(paths.images_path+'/magnet_test_2017_far_vs_near_sensor_levels_matched_times_range_of_far_sensor_and_linear_fit.png')
 #clear it
     plt.clf()
     plt.scatter(lvlnear, lvlfar, c='b', s=3)
     plt.title('Magnet Thermal Test, near and far sensor levels, section only')
     plt.ylabel('Far (cm)')
     plt.xlabel('Near(cm)')
-    fig.savefig('lvls_far_vs_near_linear.png')
+    fig.savefig(paths.images_path+'/lvls_far_vs_near_spliced_matched_times_and_then_range_of_interest.png')
     plt.clf()
 # fit?
 # try linear regression
     #do this tonight. 
-    p, res, rank, single,rcond=numpy.polyfit(lvlnear, lvlfar, 3, full=True)
-    print (res)
-    pxvals=numpy.linspace(20,100,100)
-    pvals=numpy.poly1d(p)
+#    p, res, rank, single,rcond=numpy.polyfit(lvlnear, lvlfar, 3, full=True)
+#    print (res)
+#    pxvals=numpy.linspace(20,100,1000)
+#    pvals=numpy.poly1d(p)
     plt.scatter(lvlnear, lvlfar, color='b', s=20, label='Data')
     plt.scatter(pxvals, pvals(pxvals), color='g', s=10, label='polyfit')
     plt.title('Magnet Thermal Test, near and far sensor levels with fit')
     plt.legend(loc='upper left')
     plt.ylabel('Far (cm)')
     plt.xlabel('Near(cm)')
-    fig.savefig('lvls_far_vs_near_with_fit.png')
+    fig.savefig(paths.images_path+'/lvls_far_vs_near_spliced_matched_times_and_then_range_of_interest_with_fit.png')
 
